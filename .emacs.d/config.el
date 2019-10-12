@@ -1,1 +1,0 @@
-/home/reberti/.emacs.d/config.el
