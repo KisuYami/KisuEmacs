@@ -1,0 +1,65 @@
+#+TITLE: Keybinds
+
+I don't want to type
+
+* Edit/Reload Config
+   #+BEGIN_SRC emacs-lisp
+	 (defun config-visit(file)
+	 "Open Config Files"
+		(interactive "sWhich File? ")
+		(if (= (length file) 0)
+			(find-file "~/.emacs.d/config/general.org")
+		  (find-file (concat "~/.emacs.d/config/" file ".org"))))
+
+	 (global-set-key (kbd "C-c e") 'config-visit)
+
+	 (defun config-reload ()
+	   (interactive)
+	   (org-babel-load-file (expand-file-name "~/.emacs.d/config/general.org"))
+	   (org-babel-load-file (expand-file-name "~/.emacs.d/config/visual.org"))
+	   (org-babel-load-file (expand-file-name "~/.emacs.d/config/keybindings.org"))
+	   (org-babel-load-file (expand-file-name "~/.emacs.d/config/packages.org")))
+	 (global-set-key (kbd "C-c r") 'config-reload)
+   #+END_SRC
+* Swith Window
+   #+BEGIN_SRC emacs-lisp
+  (defun split-and-fallow-hori ()
+    (interactive)
+    (split-window-below)
+    (balance-windows)
+    (other-window 1))
+  (global-set-key (kbd "C-x 2") 'split-and-fallow-hore)
+
+  (defun split-and-fallow-vert ()
+    (interactive)
+    (split-window-right)
+    (balance-windows)
+    (other-window 1))
+  (global-set-key (kbd "C-x 3") 'split-and-fallow-vert)
+   #+END_SRC
+* Vim Keys!!!
+   I'm evil, yes i am
+   #+BEGIN_SRC emacs-lisp
+  (use-package evil
+    :ensure t
+    :init (evil-mode 1))
+   #+END_SRC
+* Global
+   Lazyness
+   #+BEGIN_SRC emacs-lisp
+	 (global-set-key (kbd "C-x b") 'ido-switch-buffer)
+	 (global-set-key (kbd "C-x C-b") 'ibuffer)
+
+	 ;; Yas
+	 (global-set-key (kbd "C-x y") 'yas-describe-tables)
+
+	 ;; Magit
+	 (global-set-key (kbd "C-x g") 'magit-status)
+
+	 ;; Compile
+	 (global-unset-key (kbd "C-c C-c"))
+	 (global-set-key (kbd "C-c C-c") 'compile)
+
+	 ;; Web
+	 (global-set-key (kbd "C-c i") 'httpd-start)
+   #+END_SRC

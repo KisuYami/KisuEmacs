@@ -1,0 +1,104 @@
+#+TITLE: Packages
+
+* Auto Completion
+Keep good company
+#+BEGIN_SRC emacs-lisp
+(use-package company
+	:ensure t
+	:config
+	(add-hook 'after-init-hook 'global-company-mode)
+	(setq company-idle-delay 0)
+	(setq company-minimum-prefix-lenght 3))
+
+(with-eval-after-load 'company
+(define-key company-active-map (kbd "M-n") 'nil)
+(define-key company-active-map (kbd "M-p") 'nil))
+
+(use-package company-irony
+:ensure t
+:config
+(require 'company)
+(add-to-list 'company-backends 'company-irony))
+
+(use-package irony
+:ensure t
+:config
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+
+(with-eval-after-load 'company
+(add-hook 'c++-mode-hook 'company-mode)
+(add-hook 'c-mode-hook 'company-mode))
+#+END_SRC
+* Save & Backups
+#+BEGIN_SRC emacs-lisp
+(setq scroll-conservatively 100)
+(setq ring-bell-function 'ignore)
+(setq make-backup-file nil)
+(setq auto-save-default nil)
+#+END_SRC
+* Compilation
+#+BEGIN_SRC emacs-lisp
+(defun brian-compile-finish (buffer outstr)
+(unless (string-match "finished" outstr)
+(switch-to-buffer-other-window buffer))
+t)
+
+(setq compilation-finish-functions 'brian-compile-finish)
+
+(require 'cl)
+
+(defadvice compilation-start
+(around inhibit-display
+	(command &optional mode name-function highlight-regexp)) 
+(if (not (string-match "^\\(find\\|grep\\)" command))
+	(cl-flet ((display-buffer)
+		(set-window-point)
+		(goto-char)) 
+(fset 'display-buffer 'ignore)
+(fset 'goto-char 'ignore)
+(fset 'set-window-point 'ignore)
+(save-window-excursion 
+	ad-do-it))
+ad-do-it))
+
+(ad-activate 'compilation-start)
+#+END_SRC
+* Snippets
+#+BEGIN_SRC emacs-lisp
+(use-package yasnippet
+	:ensure t
+	:config
+(use-package yasnippet-snippets
+	:ensure t)
+	(yas-reload-all))
+
+(require 'yasnippet)
+(yas-global-mode 1)
+#+END_SRC
+* Terminal
+#+BEGIN_SRC emacs-lisp
+(defvar my-shell "/bin/bash")
+(defadvice ansi-term (before force-bash)
+(interactive (list my-shell)))
+(ad-activate 'ansi-term)
+#+END_SRC
+* General
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+#+END_SRC
+* Help
+#+BEGIN_SRC emacs-lisp
+(use-package helpful
+:ensure t
+:config
+(global-set-key (kbd "C-h f") #'helpful-callable)
+(global-set-key (kbd "C-h v") #'helpful-variable)
+(global-set-key (kbd "C-h k") #'helpful-key))
+#+END_SRC
+* Ask
+#+BEGIN_SRC emacs-lisp
+(defalias 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
