@@ -1,0 +1,10 @@
+* News :elfeed:
+** Tech
+*** https://itsfoss.com/feed
+*** http://feeds.feedburner.com/TheHackersNews?format=xml
+** Linux/Distros
+*** https://news.opensuse.org/feed/
+*** https://www.novell.com/newsfeeds/rss/patches/patch_notifications-daily.xml
+*** https://www.archlinux.org/feeds/news/
+** Reddit
+*** https://www.reddit.com/r/C_programming.rss

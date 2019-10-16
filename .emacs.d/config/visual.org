@@ -92,7 +92,7 @@ Themes, modeline, syntax hightlight and more
 * Cursor
    Highlight cursor with a line
    #+BEGIN_SRC emacs-lisp
-  (global-hl-line-mode t)
+  (global-hl-line-mode -1)
    #+END_SRC
 * Fonts
 #+BEGIN_SRC emacs-lisp

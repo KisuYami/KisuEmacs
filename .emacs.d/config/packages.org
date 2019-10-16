@@ -34,39 +34,12 @@ Keep good company
   (add-hook 'c++-mode-hook 'company-mode)
   (add-hook 'c-mode-hook 'company-mode))
 #+END_SRC
-* Save & Backups
+* Vim Keys!!!
+   I'm evil, yes i am
 #+BEGIN_SRC emacs-lisp
-(setq scroll-conservatively 100)
-(setq ring-bell-function 'ignore)
-(setq make-backup-file nil)
-(setq auto-save-default nil)
-#+END_SRC
-* Compilation
-#+BEGIN_SRC emacs-lisp
-(defun brian-compile-finish (buffer outstr)
-(unless (string-match "finished" outstr)
-(switch-to-buffer-other-window buffer))
-t)
-
-(setq compilation-finish-functions 'brian-compile-finish)
-
-(require 'cl)
-
-(defadvice compilation-start
-(around inhibit-display
-	(command &optional mode name-function highlight-regexp)) 
-(if (not (string-match "^\\(find\\|grep\\)" command))
-	(cl-flet ((display-buffer)
-		(set-window-point)
-		(goto-char)) 
-(fset 'display-buffer 'ignore)
-(fset 'goto-char 'ignore)
-(fset 'set-window-point 'ignore)
-(save-window-excursion 
-	ad-do-it))
-ad-do-it))
-
-(ad-activate 'compilation-start)
+  (use-package evil
+    :ensure t
+    :init (evil-mode 1))
 #+END_SRC
 * Snippets
 #+BEGIN_SRC emacs-lisp
@@ -80,27 +53,88 @@ ad-do-it))
 (require 'yasnippet)
 (yas-global-mode 1)
 #+END_SRC
-* Terminal
+* Window
 #+BEGIN_SRC emacs-lisp
-(defvar my-shell "/bin/bash")
-(defadvice ansi-term (before force-bash)
-(interactive (list my-shell)))
-(ad-activate 'ansi-term)
+  (use-package switch-window
+    :ensure t
+    :config
+    (setq switch-window-input-style 'minibuffer)
+    (setq switch-window-increase 4)
+    (setq switch-window-threshold 2)
+    :bind
+    ([remap other-window] . switch-window))
+
+    (global-subword-mode 1)
 #+END_SRC
-* General
+* Magit
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/lisp/")
+	(use-package magit
+		 :ensure t)
+
+	(eval-after-load 'magit
+		'(evil-set-initial-state 'magit-popup-mode 'emacs))
 #+END_SRC
 * Help
 #+BEGIN_SRC emacs-lisp
 (use-package helpful
-:ensure t
-:config
-(global-set-key (kbd "C-h f") #'helpful-callable)
-(global-set-key (kbd "C-h v") #'helpful-variable)
-(global-set-key (kbd "C-h k") #'helpful-key))
+	:ensure t)
 #+END_SRC
-* Ask
+* Smex
+   #+BEGIN_SRC emacs-lisp
+  (use-package smex
+    :ensure t
+    :init (smex-initialize)
+    :bind
+    ("M-x" . smex))
+   #+END_SRC
+* Org
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-bullets
+       :ensure t
+       :config
+       (add-hook 'org-mode-hook(lambda () (org-bullets-mode))))
+   #+END_SRC
+* RSS
 #+BEGIN_SRC emacs-lisp
-(defalias 'yes-or-no-p 'y-or-n-p)
+  (use-package elfeed
+	:ensure t)
+
+  (use-package elfeed-org
+	:ensure t
+	:config
+	(elfeed-org)
+	(setq rmh-elfeed-org-files (list "~/.emacs.d/config/elfeed.org")))
+
+  ;; Correct keybinds
+  (eval-after-load 'elfeed
+	'(progn
+		(evil-make-overriding-map elfeed-search-mode-map 'normal)
+		(add-hook 'elfeed-search-mode-hook 'evil-normalize-keymaps)))
+#+END_SRC
+* Web
+#+BEGIN_SRC emacs-lisp
+  (use-package simple-httpd
+	:ensure t)
+
+  (use-package htmlize
+	:ensure t)
+
+  (use-package impatient-mode
+	:ensure t)
+
+  (defvar a 1 "Setup for live preview")
+  (defun preview-toggle ()
+	"Toggle Live Prefiew"
+	(interactive)
+	(cond
+	 ((= a 1)
+	  (httpd-start)
+	  (impatient-mode)
+	  (message "Starting Preview")
+	  (setq a 2))
+	 ((= a 2)
+	  (httpd-stop)
+	  (impatient-mode)
+	  (message "Stopping Preview")
+	  (setq a 1))))
 #+END_SRC

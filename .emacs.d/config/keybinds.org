@@ -1,65 +1,75 @@
 #+TITLE: Keybinds
 
 I don't want to type
+* Unbinds
+#+BEGIN_SRC emacs-lisp
+	(global-set-key (kbd "C-x b") 'nil)
+	(global-set-key (kbd "C-x k") 'nil)
+	(global-set-key (kbd "C-x C-b") 'nil)
+	(global-set-key (kbd "C-x C-e") 'nil)
 
-* Edit/Reload Config
-   #+BEGIN_SRC emacs-lisp
-	 (defun config-visit(file)
-	 "Open Config Files"
-		(interactive "sWhich File? ")
-		(if (= (length file) 0)
-			(find-file "~/.emacs.d/config/general.org")
-		  (find-file (concat "~/.emacs.d/config/" file ".org"))))
+	(global-set-key (kbd "C-x 1") 'nil)
+	(global-set-key (kbd "C-x 2") 'nil)
+	(global-set-key (kbd "C-x 3") 'nil)
+	(global-set-key (kbd "C-x 0") 'nil)
+	(global-set-key (kbd "C-x o") 'nil)
 
-	 (global-set-key (kbd "C-c e") 'config-visit)
+	(global-set-key (kbd "C-g") 'nil)
 
-	 (defun config-reload ()
-	   (interactive)
-	   (org-babel-load-file (expand-file-name "~/.emacs.d/config/general.org"))
-	   (org-babel-load-file (expand-file-name "~/.emacs.d/config/visual.org"))
-	   (org-babel-load-file (expand-file-name "~/.emacs.d/config/keybindings.org"))
-	   (org-babel-load-file (expand-file-name "~/.emacs.d/config/packages.org")))
-	 (global-set-key (kbd "C-c r") 'config-reload)
-   #+END_SRC
-* Swith Window
-   #+BEGIN_SRC emacs-lisp
-  (defun split-and-fallow-hori ()
-    (interactive)
-    (split-window-below)
-    (balance-windows)
-    (other-window 1))
-  (global-set-key (kbd "C-x 2") 'split-and-fallow-hore)
-
-  (defun split-and-fallow-vert ()
-    (interactive)
-    (split-window-right)
-    (balance-windows)
-    (other-window 1))
-  (global-set-key (kbd "C-x 3") 'split-and-fallow-vert)
-   #+END_SRC
-* Vim Keys!!!
-   I'm evil, yes i am
-   #+BEGIN_SRC emacs-lisp
-  (use-package evil
-    :ensure t
-    :init (evil-mode 1))
-   #+END_SRC
-* Global
+	(global-set-key (kbd "C-h k") 'nil)
+	(global-set-key (kbd "C-h f") 'nil)
+#+END_SRC
+* General
    Lazyness
-   #+BEGIN_SRC emacs-lisp
-	 (global-set-key (kbd "C-x b") 'ido-switch-buffer)
-	 (global-set-key (kbd "C-x C-b") 'ibuffer)
+#+BEGIN_SRC emacs-lisp
+    (add-to-list 'load-path "~/.emacs.d/lisp/")
 
-	 ;; Yas
-	 (global-set-key (kbd "C-x y") 'yas-describe-tables)
+	;; TODO: use use-package
+	(require 'custom-binds)
+	(require 'general)
 
-	 ;; Magit
-	 (global-set-key (kbd "C-x g") 'magit-status)
+	(general-define-key
+		:states '(normal emacs)
+		:prefix "SPC"
+		:non-normal-prefix "C-SPC"
 
-	 ;; Compile
-	 (global-unset-key (kbd "C-c C-c"))
-	 (global-set-key (kbd "C-c C-c") 'compile)
+		;; simple command
+		"RET" 'eshell
 
-	 ;; Web
-	 (global-set-key (kbd "C-c i") 'httpd-start)
-   #+END_SRC
+		;; Emacs Binds
+		"ESC" 'keyboard-quit
+
+		;; Files
+		"f" 'ido-find-file
+
+		;; Config
+		"cr" 'config-reload
+		"ce" 'config-visit
+
+		;; Buffers
+		"k"  'ido-kill-buffer
+		"b"  'ido-switch-buffer
+		"xb" 'ibuffer
+
+		;; Windows
+		"wv" 'split-and-fallow-v
+		"wh" 'split-and-fallow-h
+		"wo" 'switch-window
+		"wk" 'delete-window
+		"wd" 'delete-other-windows
+
+		;; Programming
+		"e" 'eval-last-sexp
+		"xe" 'org-edit-special
+		"cp" 'org-latex-export-to-pdf
+
+		"cc" 'compile
+		"gg" 'magit-status
+
+		;; Help
+		"hk" 'helpful-key
+		"hf" 'helpful-function
+		"hy" 'yas-describe-tables
+
+  )
+#+END_SRC

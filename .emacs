@@ -1,13 +1,12 @@
 (require 'package)
 (setq package-enable-at-startup nil)
-(add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-(org-babel-load-file (expand-file-name "~/.emacs.d/config/general.org"))
 (org-babel-load-file (expand-file-name "~/.emacs.d/config/packages.org"))
-(org-babel-load-file (expand-file-name "~/.emacs.d/config/visual.org"))
 (org-babel-load-file (expand-file-name "~/.emacs.d/config/keybinds.org"))
+(org-babel-load-file (expand-file-name "~/.emacs.d/config/visual.org"))
+(org-babel-load-file (expand-file-name "~/.emacs.d/config/general.org"))
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -30,7 +29,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
  '(package-selected-packages
    (quote
-	(helpful impatient-mode org-reveal ox-reveal evil-magit company-irony company c-eldoc org-preview-html-mode emms weechat smart-mode-line-powerline-theme smart-mode-line immaterial-theme try exwm dashboard smex org-bullets material-theme spacemacs-theme which-key use-package)))
+	(elfeed-org general skewer-mode helpful impatient-mode org-reveal ox-reveal evil-magit company-irony company c-eldoc org-preview-html-mode emms weechat smart-mode-line-powerline-theme smart-mode-line immaterial-theme try exwm dashboard smex org-bullets material-theme spacemacs-theme which-key use-package)))
  '(vc-annotate-background "#282c34")
  '(vc-annotate-color-map
    (list

@@ -1,69 +1,50 @@
 #+TITLE: General
 
-* Normal
-   #+BEGIN_SRC emacs-lisp
-(setq-default indent-tabs-mode t)
-(setq tab-width 4) ; or any other preferred value
-(defvaralias 'c-basic-offset 'tab-width)
-(defvaralias 'cperl-indent-level 'tab-width)
-
-  (use-package avy
-    :ensure t
-    :bind
-    ("M-s" . avy-goto-char))
-
-  (use-package switch-window
-    :ensure t
-    :config
-    (setq switch-window-input-style 'minibuffer)
-    (setq switch-window-increase 4)
-    (setq switch-window-threshold 2)
-    :bind
-    ([remap other-window] . switch-window))
-
-    (global-subword-mode 1)
-   #+END_SRC
-* Backup
+* General
 #+BEGIN_SRC emacs-lisp
-  (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
-	backup-by-copying t    ; Don't delink hardlinks
-	version-control t      ; Use version numbers on backups
-	delete-old-versions t  ; Automatically delete excess backups
-	kept-new-versions 20   ; how many of the newest versions to keep
-	kept-old-versions 5    ; and how many of the old
-  )
+   (setq-default indent-tabs-mode t)
+   (setq tab-width 4) ; or any other preferred value
+   (defvaralias 'c-basic-offset 'tab-width)
+
+   ;; Local LISP
+   (add-to-list 'load-path "~/.emacs.d/lisp/")
+
+   ;; Ask
+   (defalias 'yes-or-no-p 'y-or-n-p)
+   
+   ;; Ring
+   (setq ring-bell-function 'ignore)
 #+END_SRC
-* I-Do
+** Terminal
+#+BEGIN_SRC emacs-lisp
+   (defvar my-shell "/bin/bash")
+   (defadvice ansi-term (before force-bash)
+   (interactive (list my-shell)))
+   (ad-activate 'ansi-term)
+#+END_SRC
+** Backup
+#+BEGIN_SRC emacs-lisp
+	;disable backup
+	(setq backup-inhibited t)
+	;disable auto save
+	(setq auto-save-default nil)
+	#+END_SRC
+* Modes
+** I-Do
    #+BEGIN_SRC emacs-lisp
   (setq ido-enable-matching nil)
   (setq ido-create-new-buffer 'always)
   (setq ido-everywhere t)
   (ido-mode 1)
    #+END_SRC
-* Magit
-   #+BEGIN_SRC emacs-lisp
-    (use-package magit
-	:ensure t)
-
-    (use-package evil-magit
-	:ensure t)
-   #+END_SRC
-* Smex
-   #+BEGIN_SRC emacs-lisp
-  (use-package smex
-    :ensure t
-    :init (smex-initialize)
-    :bind
-    ("M-x" . smex))
-   #+END_SRC
-* Evil
-** Aways Evil
+** Evil
+*** Aways Evil
     #+BEGIN_SRC emacs-lisp
   (setq evil-emacs-state-modes nil)
   (setq evil-insert-state-modes nil)
   (setq evil-motion-state-modes nil)
     #+END_SRC
-** PageDown/Up
+*** PageDown/Up
     #+BEGIN_SRC emacs-lisp
     (define-key evil-normal-state-map (kbd "C-k") (lambda ()
                     (interactive)
@@ -73,48 +54,41 @@
                         (evil-scroll-down nil)))
 
     #+END_SRC
-** No insert back
+*** No insert back
     #+BEGIN_SRC emacs-lisp
 (setq evil-move-cursor-back nil)
     #+END_SRC
-* Org
-   #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-c p") 'org-latex-export-to-pdf)
-
-     (use-package org-bullets
-       :ensure t
-       :config
-       (add-hook 'org-mode-hook(lambda () (org-bullets-mode))))
-
-   #+END_SRC
-* Web
-#+BEGIN_SRC emacs-lisp
-  (use-package simple-httpd
-	:ensure t)
-
-  (use-package htmlize
-	:ensure t)
-
-  (use-package impatient-mode
-	:ensure t)
-
-  (defvar a 1 "Setup for Impatient Server")
-
-  (defun impatient-toggle ()
-	"Toggle Impatient Server"
-	(interactive)
-	(cond
-	 ((= a 1)
-	  (httpd-start)
-	  (setq a 2))
-	 ((= a 2)
-	  (httpd-stop)
-	  (setq a 1))))
-#+END_SRC
-* C
+** C
    #+BEGIN_SRC emacs-lisp
      (setq c-default-style "bsd"
 	       c-basic-offset 4)
 
      (setq-default c-basic-offset 4)
    #+END_SRC
+*** Compilation
+#+BEGIN_SRC emacs-lisp
+(defun brian-compile-finish (buffer outstr)
+(unless (string-match "finished" outstr)
+(switch-to-buffer-other-window buffer))
+t)
+
+(setq compilation-finish-functions 'brian-compile-finish)
+
+(require 'cl)
+
+(defadvice compilation-start
+(around inhibit-display
+	(command &optional mode name-function highlight-regexp)) 
+(if (not (string-match "^\\(find\\|grep\\)" command))
+	(cl-flet ((display-buffer)
+		(set-window-point)
+		(goto-char)) 
+(fset 'display-buffer 'ignore)
+(fset 'goto-char 'ignore)
+(fset 'set-window-point 'ignore)
+(save-window-excursion 
+	ad-do-it))
+ad-do-it))
+
+(ad-activate 'compilation-start)
+#+END_SRC
