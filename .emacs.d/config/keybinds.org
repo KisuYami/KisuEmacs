@@ -22,54 +22,74 @@ I don't want to type
 * General
    Lazyness
 #+BEGIN_SRC emacs-lisp
-    (add-to-list 'load-path "~/.emacs.d/lisp/")
+	  (add-to-list 'load-path "~/.emacs.d/lisp/")
 
-	;; TODO: use use-package
-	(require 'custom-binds)
-	(require 'general)
+	  ;; TODO: use use-package
+	  (require 'custom-binds)
+	  (require 'general)
 
-	(general-define-key
-		:states '(normal emacs)
-		:prefix "SPC"
-		:non-normal-prefix "C-SPC"
+	  (global-set-key (kbd "s-d") 'dmenu)
+	  (global-set-key (kbd "s-k") 'exwm-workspace-delete)
+	  (global-set-key (kbd "s-o") 'exwm-workspace-swap)
 
-		;; simple command
-		"RET" 'eshell
+	  (general-define-key
+		  :states '(normal emacs)
+		  :prefix "SPC"
+		  :non-normal-prefix "C-SPC"
 
-		;; Emacs Binds
-		"ESC" 'keyboard-quit
+		  ;; simple command
+		  "RET" 'eshell
+		
+		  ;; Config
+		  "cr" 'config-reload
+		  "ce" 'config-visit
 
-		;; Files
-		"f" 'ido-find-file
+		  ;; Files
+		  "xf" 'ido-find-file
 
-		;; Config
-		"cr" 'config-reload
-		"ce" 'config-visit
+		  ;; Buffers
+		  "b"  'ido-switch-buffer
+		  "xb" 'ibuffer
+		  "xk" 'ido-kill-buffer
 
-		;; Buffers
-		"k"  'ido-kill-buffer
-		"b"  'ido-switch-buffer
-		"xb" 'ibuffer
+		  ;; Windows
+		  "wo" 'switch-window
 
-		;; Windows
-		"wv" 'split-and-fallow-v
-		"wh" 'split-and-fallow-h
-		"wo" 'switch-window
-		"wk" 'delete-window
-		"wd" 'delete-other-windows
+		  "wv" 'split-and-fallow-v
+		  "wh" 'split-and-fallow-h
 
-		;; Programming
-		"e" 'eval-last-sexp
-		"xe" 'org-edit-special
-		"cp" 'org-latex-export-to-pdf
+		  "wk" 'delete-window
+		  "wd" 'delete-other-windows
 
-		"cc" 'compile
-		"gg" 'magit-status
+		  ;; Programming
+		  "xe" 'eval-last-sexp
 
-		;; Help
-		"hk" 'helpful-key
-		"hf" 'helpful-function
-		"hy" 'yas-describe-tables
+		  "c'" 'org-edit-special
+		  "cp" 'org-latex-export-to-pdf
 
-  )
+		  "cc" 'compile
+		  "gg" 'magit-status
+
+		  ;; EMMS
+		  "mm" 'emms
+		  "mb" 'emms-smart-browse
+		  "mr" 'emms-player-mpd-update-all-reset-cache
+
+		  "ms" 'emms-setup-mpd
+		  "mS" 'emms-stop
+
+		  "mp" 'emms-previous
+		  "mn" 'emms-next
+		  "mP" 'emms-pause
+		
+		  ;; RSS
+		  "cn" 'elfeed
+
+		  ;; Help
+		  "hk" 'helpful-key
+		  "hf" 'helpful-function
+
+		  "hy" 'yas-describe-tables
+
+	)
 #+END_SRC

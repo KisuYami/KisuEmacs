@@ -74,6 +74,30 @@ Keep good company
 	(eval-after-load 'magit
 		'(evil-set-initial-state 'magit-popup-mode 'emacs))
 #+END_SRC
+* EMMS
+#+BEGIN_SRC emacs-lisp
+  (use-package emms
+	:ensure t
+	:config
+	  (require 'emms-setup)
+	  (require 'emms-player-mpd)
+	  (emms-all) ; don't change this to values you see on stackoverflow questions if you expect emms to work
+	  (setq emms-seek-seconds 5)
+	  (setq emms-player-list '(emms-player-mpd))
+	  (setq emms-info-functions '(emms-info-mpd))
+	  (setq emms-player-mpd-server-name "localhost")
+	  (setq emms-player-mpd-server-port "6601"))
+
+  (eval-after-load 'emms
+	  '(evil-set-initial-state 'emms-mode 'insert))
+
+  (defun emms-setup-mpd ()
+	  "Start MPD, connects to it and syncs the metadata cache."
+	  (interactive)
+	  (emms-player-mpd-connect)
+	  (emms-cache-set-from-mpd-all)
+	  (message "MPD Started!"))
+#+END_SRC
 * Help
 #+BEGIN_SRC emacs-lisp
 (use-package helpful
@@ -137,4 +161,61 @@ Keep good company
 	  (impatient-mode)
 	  (message "Stopping Preview")
 	  (setq a 1))))
+#+END_SRC
+* WM
+** EXWM
+#+BEGIN_SRC emacs-lisp
+  (use-package exwm
+	:ensure t
+	:config
+	(require 'exwm-systemtray)
+	(exwm-systemtray-enable)
+	(require 'exwm-config)
+	(exwm-config-default))
+#+END_SRC
+** DMenu
+#+BEGIN_SRC emacs-lisp
+  (use-package dmenu
+	 :ensure t)
+#+END_SRC
+** Modeline
+*** Geral
+#+BEGIN_SRC emacs-lisp
+(use-package diminish
+  :ensure t
+  :init
+  (diminish 'which-key-mode)
+  (diminish 'undo-tree-mode)
+  (diminish 'subword-mode)
+  (diminish 'which-key-mode)
+  (diminish 'projectile-mode)
+  (diminish 'rainbow-mode))
+#+END_SRC
+*** Battery
+#+BEGIN_SRC emacs-lisp
+(use-package fancy-battery
+   :ensure t
+   :config
+   (add-hook 'after-init-hook #'fancy-battery-mode)
+   (setq fancy-battery-mode-line
+	  '(:eval (unless (equal (cdr (assq ?b fancy-battery-last-status)) "+")
+					(fancy-battery-default-mode-line))))
+)
+#+END_SRC
+*** Clock
+#+BEGIN_SRC emacs-lisp
+ (defface egoge-display-time
+   '((((type x w32 mac))
+      ;; #060525 is the background colour of my default face.
+      (:foreground "#ffffff" :inherit bold))
+     (((type tty))
+      (:foreground "white")))
+   "Face used to display the time in the mode line.")
+ ;; This causes the current time in the mode line to be displayed in
+ ;; `egoge-display-time-face' to make it stand out visually.
+ (setq display-time-string-forms
+       '((propertize (concat " " 24-hours ":" minutes " ")
+ 		    'face 'egoge-display-time)))
+
+ (display-time-mode 1)
 #+END_SRC

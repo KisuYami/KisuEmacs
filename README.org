@@ -1,0 +1,62 @@
+#+title: KisuEmacs
+#+author: Reberti Carvalho Soares
+
+KisuEmacs: The WM of KisuYami
+* Configurations
+** .xinitrc
+   #+BEGIN_SRC bash
+#!/bin/sh
+xset r rate 200 50
+(sleep 0.001 && mpd) &
+(sleep 0.001 && xmodmap ~/.editorkeys) &
+(sleep 0.001 && xrdb .Xresources) &
+(sleep 0.001 && unclutter ) &
+(sleep 0.001 && eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)) &
+(sleep 0.001 && export SSH_AUTH_SOCK) &
+(sleep 0.001 && xmodmap ~/.editorkeys) &
+exec emacs
+   #+END_SRC
+** .editorkeys
+#+BEGIN_SRC bash
+! -*- coding: utf-8 -*-
+! 2014-09-10
+! make caps lock do escape
+! from http://xahlee.info/
+
+! keycode   9 = Escape NoSymbol Escape
+! keycode  66 = Caps_Lock NoSymbol Caps_Lock
+
+clear Lock
+remove Lock = 66
+keycode 66 = Escape NoSymbol Escape
+#+END_SRC
+** .config/mpd/mpd.conf
+#+BEGIN_SRC bash
+db_file            "~/.config/mpd/database"
+log_file           "~/.config/mpd/log"
+music_directory    "~/Music"
+playlist_directory "~/.config/mpd/playlists"
+pid_file           "~/.config/mpd/pid"
+state_file         "~/.config/mpd/state"
+sticker_file       "~/.config/mpd/sticker.sql"
+
+auto_update "yes"
+
+bind_to_address "127.0.0.1"
+port "6601"
+restore_paused "yes"
+max_output_buffer_size "16384"
+
+audio_output {
+      type  "pulse"
+      name  "pulse audio"
+      mixer_type "software"
+}
+
+audio_output {
+type               "fifo"
+name               "toggle_visualizer"
+path               "/tmp/mpd.fifo"
+format             "44100:16:2"
+}
+#+END_SRC

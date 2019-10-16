@@ -29,7 +29,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
  '(package-selected-packages
    (quote
-	(elfeed-org general skewer-mode helpful impatient-mode org-reveal ox-reveal evil-magit company-irony company c-eldoc org-preview-html-mode emms weechat smart-mode-line-powerline-theme smart-mode-line immaterial-theme try exwm dashboard smex org-bullets material-theme spacemacs-theme which-key use-package)))
+	(fancy-battery dmenu elfeed-org general skewer-mode helpful impatient-mode org-reveal ox-reveal evil-magit company-irony company c-eldoc org-preview-html-mode emms weechat smart-mode-line-powerline-theme smart-mode-line immaterial-theme try exwm dashboard smex org-bullets material-theme spacemacs-theme which-key use-package)))
  '(vc-annotate-background "#282c34")
  '(vc-annotate-color-map
    (list
