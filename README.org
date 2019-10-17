@@ -2,6 +2,11 @@
 #+author: Reberti Carvalho Soares
 
 KisuEmacs: The WM of KisuYami
+* Install
+#+BEGIN_SRC sh
+cp KisuEmacs/.emacs ~/
+cp -r KisuEmacs/.emacs.d ~/
+#+END_SRC
 * Configurations
 ** .xinitrc
    #+BEGIN_SRC bash

@@ -1,16 +1,21 @@
 (require 'package)
+
 (setq package-enable-at-startup nil)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '
+			 ("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(add-to-list 'load-path "/home/reberti/.emacs.d/mu4e/")
+(add-to-list 'load-path "/home/reberti/.emacs.d/lisp/")
 
 (org-babel-load-file (expand-file-name "~/.emacs.d/config/packages.org"))
 (org-babel-load-file (expand-file-name "~/.emacs.d/config/keybinds.org"))
 (org-babel-load-file (expand-file-name "~/.emacs.d/config/visual.org"))
 (org-babel-load-file (expand-file-name "~/.emacs.d/config/general.org"))
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -29,7 +34,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
  '(package-selected-packages
    (quote
-	(notmuch wanderlust WanderLust mu4e org-mu4e swiper rainbow-mode rainbow-delimiters sudo-edit hungry-delete fancy-battery dmenu elfeed-org general skewer-mode helpful impatient-mode org-reveal ox-reveal evil-magit company-irony company c-eldoc org-preview-html-mode emms weechat smart-mode-line-powerline-theme smart-mode-line immaterial-theme try exwm dashboard smex org-bullets material-theme spacemacs-theme which-key use-package)))
+	(ox-twbs notmuch wanderlust WanderLust mu4e org-mu4e swiper rainbow-mode rainbow-delimiters sudo-edit hungry-delete fancy-battery dmenu elfeed-org general skewer-mode helpful impatient-mode org-reveal ox-reveal evil-magit company-irony company c-eldoc org-preview-html-mode emms weechat smart-mode-line-powerline-theme smart-mode-line immaterial-theme try exwm dashboard smex org-bullets material-theme spacemacs-theme which-key use-package)))
  '(send-mail-function (quote smtpmail-send-it))
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(smtpmail-smtp-service 25)

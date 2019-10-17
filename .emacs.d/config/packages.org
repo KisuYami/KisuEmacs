@@ -48,6 +48,12 @@ Keep good company
     :ensure t
     :init (evil-mode 1))
 #+END_SRC
+* Org Export
+** twbs
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-twbs
+	:ensure t)
+#+END_SRC
 * Sudo Edit
 #+BEGIN_SRC emacs-lisp
   (use-package sudo-edit
@@ -82,17 +88,49 @@ Keep good company
   (add-hook 'c-mode #'c/lisp-pair-mode)
   (electric-pair-mode t)
 #+END_SRC
-* Rainbow
+* Ibuffer
 #+BEGIN_SRC emacs-lisp
-  (use-package rainbow-mode
-	:ensure t
-	:init
-	(rainbow-mode t))
+   (setq ibuffer-saved-filter-groups
+		 (quote (("default"
+				  ("dired" (mode . dired-mode))
+				  ("programming" (or
+							  (mode . css-mode)
+							  (mode . html-mode)
+							  (mode . markdown-mode)
+							  (mode . org-mode)
+							  (mode . asm-mode)
+							  (mode . prog-mode)))
+				  ("planner" (or
+							  (name . "^\\*Calendar\\*$")
+							  (name . "^diary$")
+							  (mode . muse-mode)))
+				  ("emacs" (or
+							(name . "^\\*dashboard\\*$")
+							(name . "^\\*scratch\\*$")
+							(name . "^\\*Messages\\*$")
+							(name . "^\\*elfeed-log\\*$")))
+				  ("feeds" (or
+						   (mode . message-mode)
+						   (mode . bbdb-mode)
+						   (mode . mail-mode)
+						   (mode . gnus-group-mode)
+						   (mode . gnus-summary-mode)
+						   (mode . gnus-article-mode)
+						   (mode . elfeed-search-mode)
+						   (mode . notmuch-hello-mode)
+						   (mode . notmuch-search-mode)
+						   (mode . notmuch-message-mode)
+						   (mode . notmuch-show-mode)
+						   (name . "^\\.bbdb$")
+						   (name . "^\\.newsrc-dribble")))))))
 
-  (use-package rainbow-delimiters
-	:ensure t
-	:init
-	(rainbow-delimiters-mode 1))
+   (add-hook 'ibuffer-mode-hook
+			 (lambda ()
+			   (ibuffer-auto-mode 1)
+			   (ibuffer-switch-to-saved-filter-groups "default")))
+
+  (setq ibuffer-expert t)
+  (setq ibuffer-show-empty-filter-groups nil)
 #+END_SRC
 * Window
 #+BEGIN_SRC emacs-lisp
