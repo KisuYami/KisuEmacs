@@ -34,12 +34,24 @@ Keep good company
   (add-hook 'c++-mode-hook 'company-mode)
   (add-hook 'c-mode-hook 'company-mode))
 #+END_SRC
+* Hungry Delete
+  #+BEGIN_SRC emacs-lisp
+	(use-package hungry-delete
+	  :ensure t
+	  :config
+	  (global-hungry-delete-mode))
+  #+END_SRC
 * Vim Keys!!!
    I'm evil, yes i am
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :ensure t
     :init (evil-mode 1))
+#+END_SRC
+* Sudo Edit
+#+BEGIN_SRC emacs-lisp
+  (use-package sudo-edit
+	:ensure t)
 #+END_SRC
 * Snippets
 #+BEGIN_SRC emacs-lisp
@@ -52,6 +64,35 @@ Keep good company
 
 (require 'yasnippet)
 (yas-global-mode 1)
+#+END_SRC
+* Electric
+#+BEGIN_SRC emacs-lisp
+  (defun c/lisp-pair-mode ()
+	(if (derived-mode-p 'c-mode)
+		(setq electric-pair-pairs '(
+									(?\( . ?\))
+									(?\[ . ?\])
+									(?\{ . ?\})
+									(?\" . ?\")
+									(?\' . ?\')
+									))
+		(setq electric-pair-pairs '((?\( . ?\))))
+		))
+
+  (add-hook 'c-mode #'c/lisp-pair-mode)
+  (electric-pair-mode t)
+#+END_SRC
+* Rainbow
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-mode
+	:ensure t
+	:init
+	(rainbow-mode t))
+
+  (use-package rainbow-delimiters
+	:ensure t
+	:init
+	(rainbow-delimiters-mode 1))
 #+END_SRC
 * Window
 #+BEGIN_SRC emacs-lisp
@@ -66,6 +107,11 @@ Keep good company
 
     (global-subword-mode 1)
 #+END_SRC
+* Swiper
+#+BEGIN_SRC emacs-lisp
+  (use-package swiper
+	:ensure t)
+#+END_SRC
 * Magit
 #+BEGIN_SRC emacs-lisp
 	(use-package magit
@@ -73,6 +119,13 @@ Keep good company
 
 	(eval-after-load 'magit
 		'(evil-set-initial-state 'magit-popup-mode 'emacs))
+#+END_SRC
+* Email
+#+BEGIN_SRC emacs-lisp
+  (use-package notmuch
+	:ensure t)
+
+  (autoload 'notmuch "notmuch" "notmuch mail" t)
 #+END_SRC
 * EMMS
 #+BEGIN_SRC emacs-lisp
@@ -165,57 +218,57 @@ Keep good company
 * WM
 ** EXWM
 #+BEGIN_SRC emacs-lisp
-  (use-package exwm
-	:ensure t
-	:config
-	(require 'exwm-systemtray)
-	(exwm-systemtray-enable)
-	(require 'exwm-config)
-	(exwm-config-default))
+  ;(use-package exwm
+	;:ensure t
+	;:config
+	;(require 'exwm-systemtray)
+	;(exwm-systemtray-enable)
+	;(require 'exwm-config)
+	;(exwm-config-default))
 #+END_SRC
 ** DMenu
 #+BEGIN_SRC emacs-lisp
-  (use-package dmenu
-	 :ensure t)
+  ;(use-package dmenu
+	 ;:ensure t)
 #+END_SRC
 ** Modeline
 *** Geral
 #+BEGIN_SRC emacs-lisp
-(use-package diminish
-  :ensure t
-  :init
-  (diminish 'which-key-mode)
-  (diminish 'undo-tree-mode)
-  (diminish 'subword-mode)
-  (diminish 'which-key-mode)
-  (diminish 'projectile-mode)
-  (diminish 'rainbow-mode))
+;(use-package diminish
+  ;:ensure t
+  ;:init
+  ;(diminish 'which-key-mode)
+  ;(diminish 'undo-tree-mode)
+  ;(diminish 'subword-mode)
+  ;(diminish 'which-key-mode)
+  ;(diminish 'projectile-mode)
+  ;(diminish 'rainbow-mode))
 #+END_SRC
 *** Battery
 #+BEGIN_SRC emacs-lisp
-(use-package fancy-battery
-   :ensure t
-   :config
-   (add-hook 'after-init-hook #'fancy-battery-mode)
-   (setq fancy-battery-mode-line
-	  '(:eval (unless (equal (cdr (assq ?b fancy-battery-last-status)) "+")
-					(fancy-battery-default-mode-line))))
-)
+;(use-package fancy-battery
+   ;:ensure t
+   ;:config
+   ;(add-hook 'after-init-hook #'fancy-battery-mode)
+   ;(setq fancy-battery-mode-line
+	  ;'(:eval (unless (equal (cdr (assq ?b fancy-battery-last-status)) "+")
+					;(fancy-battery-default-mode-line))))
+;)
 #+END_SRC
 *** Clock
 #+BEGIN_SRC emacs-lisp
- (defface egoge-display-time
-   '((((type x w32 mac))
-      ;; #060525 is the background colour of my default face.
-      (:foreground "#ffffff" :inherit bold))
-     (((type tty))
-      (:foreground "white")))
-   "Face used to display the time in the mode line.")
- ;; This causes the current time in the mode line to be displayed in
- ;; `egoge-display-time-face' to make it stand out visually.
- (setq display-time-string-forms
-       '((propertize (concat " " 24-hours ":" minutes " ")
- 		    'face 'egoge-display-time)))
-
- (display-time-mode 1)
+;(defface egoge-display-time
+   ;'((((type x w32 mac))
+      ;;; #060525 is the background colour of my default face.
+      ;(:foreground "#ffffff" :inherit bold))
+     ;(((type tty))
+      ;(:foreground "white")))
+   ;"Face used to display the time in the mode line.")
+ ;;; This causes the current time in the mode line to be displayed in
+ ;;; `egoge-display-time-face' to make it stand out visually.
+ ;(setq display-time-string-forms
+       ;'((propertize (concat " " 24-hours ":" minutes " ")
+ 		    ;'face 'egoge-display-time)))
+;
+ ;(display-time-mode 1)
 #+END_SRC

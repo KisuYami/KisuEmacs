@@ -18,6 +18,7 @@
 	(balance-windows)
 	(other-window 1))
 
+;; Config
 (defun config-visit(file)
 	"Open Config Files"
 	(interactive "sWhich File? ")
@@ -32,3 +33,12 @@
 	(org-babel-load-file (expand-file-name "~/.emacs.d/config/visual.org"))
 	(org-babel-load-file (expand-file-name "~/.emacs.d/config/keybindings.org"))
 	(org-babel-load-file (expand-file-name "~/.emacs.d/config/packages.org")))
+
+;; Buffers
+(defun kill-current-buffer ()
+  (interactive)
+  (kill-buffer (current-buffer)))
+
+(defun kill-all-buffers ()
+   (interactive)
+   (mapc 'kill-buffer (buffer-list)))

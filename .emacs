@@ -29,7 +29,10 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
  '(package-selected-packages
    (quote
-	(fancy-battery dmenu elfeed-org general skewer-mode helpful impatient-mode org-reveal ox-reveal evil-magit company-irony company c-eldoc org-preview-html-mode emms weechat smart-mode-line-powerline-theme smart-mode-line immaterial-theme try exwm dashboard smex org-bullets material-theme spacemacs-theme which-key use-package)))
+	(notmuch wanderlust WanderLust mu4e org-mu4e swiper rainbow-mode rainbow-delimiters sudo-edit hungry-delete fancy-battery dmenu elfeed-org general skewer-mode helpful impatient-mode org-reveal ox-reveal evil-magit company-irony company c-eldoc org-preview-html-mode emms weechat smart-mode-line-powerline-theme smart-mode-line immaterial-theme try exwm dashboard smex org-bullets material-theme spacemacs-theme which-key use-package)))
+ '(send-mail-function (quote smtpmail-send-it))
+ '(smtpmail-smtp-server "smtp.gmail.com")
+ '(smtpmail-smtp-service 25)
  '(vc-annotate-background "#282c34")
  '(vc-annotate-color-map
    (list

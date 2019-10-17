@@ -30,6 +30,37 @@ clear Lock
 remove Lock = 66
 keycode 66 = Escape NoSymbol Escape
 #+END_SRC
+** .mbsyncrc
+#+BEGIN_SRC bash
+Create Slave
+SyncState *
+
+IMAPAccount gmail
+CertificateFile /var/lib/ca-certificates/ca-bundle.pem # Open Suse
+SSLVersions TLSv1.1
+SSLType IMAPS
+Host imap.gmail.com
+User <mail>
+Pass <pass>
+PipelineDepth 50
+
+MaildirStore gmail-local
+# The trailing "/" is important
+Path ~/.maildir/
+Inbox ~/.maildir/Inbox
+Subfolders Verbatim
+
+IMAPStore gmail-remote
+Account gmail
+
+Channel main
+Master :gmail-remote:
+Slave :gmail-local:
+
+# Get all the gmail channels together into a group.
+Group googlemail
+Channel main
+#+END_SRC
 ** .config/mpd/mpd.conf
 #+BEGIN_SRC bash
 db_file            "~/.config/mpd/database"

@@ -58,6 +58,13 @@
     #+BEGIN_SRC emacs-lisp
 (setq evil-move-cursor-back nil)
     #+END_SRC
+** Org
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-window-setup 'current-window)
+
+  (add-to-list 'org-structure-template-alist
+			   '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+#+END_SRC
 ** C
    #+BEGIN_SRC emacs-lisp
      (setq c-default-style "bsd"
