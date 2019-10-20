@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: ... func(...) {}
+# key: func
+# group : control structure
+# --
+${void}
+${func}(${void})
+{
+	$0
+	return;
+}

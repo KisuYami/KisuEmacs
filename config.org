@@ -1,0 +1,679 @@
+#+title: KisuEmacs
+[[./img/kisuemacs.png]]
+
+* Install
+  Just run:
+#+begin_example
+  git https://github.com/KisuYami/KisuEmacs.git ~/.emacs.d/
+#+end_example
+** Dependencies
+   You may need:
+   - notmuch
+   - mbsync
+* Visual
+** Theme
+   A confy theme
+#+BEGIN_SRC emacs-lisp
+	 (use-package doom-themes
+	   :ensure t
+	   :config
+	   (load-theme 'doom-one t)
+	   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+			 doom-themes-enable-italic t) ; if nil, italics is universally disabled
+	   (doom-themes-org-config))
+
+	 (use-package doom-modeline
+	   :ensure t
+	   :init
+	   :hook (after-init . doom-modeline-mode))
+
+	 (use-package diminish
+	   :ensure t
+	   :init
+	   (diminish 'which-key-mode)
+	   (diminish 'undo-tree-mode)
+	   (diminish 'subword-mode)
+	   (diminish 'which-key-mode)
+	   (diminish 'rainbow-mode))
+#+END_SRC
+** Overall
+   Remove everything that reminds me of a GUI
+   #+BEGIN_SRC emacs-lisp
+	 (tool-bar-mode -1)
+	 (menu-bar-mode -1)
+	 (scroll-bar-mode -1)
+
+	 ;; Pretty lambda
+	 (when window-system
+	   (use-package pretty-mode
+		 :ensure t
+		 :config
+		 (global-pretty-mode t)))
+
+	 (setq scroll-margin 3
+		   scroll-conservatively 9999
+		   scroll-step 1)
+
+	 ;; Highlight cursor
+	 (global-hl-line-mode 1)
+
+	 ;; Set font
+	 (add-to-list 'default-frame-alist '(font . "Hack-13" ))
+   #+END_SRC
+** Startup
+   Dash as startup page
+   #+BEGIN_SRC emacs-lisp
+	 (use-package projectile
+	   :ensure t
+	   :config
+	   (projectile-mode +1))
+
+	 (use-package page-break-lines
+	   :ensure t)
+
+	 (use-package dashboard
+	   :ensure t
+	   :config
+	   (dashboard-setup-startup-hook)
+	   (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
+	   (setq dashboard-banner-logo-title "Welcome to the dark side")
+	   (setq dashboard-center-content t)
+	   (setq dashboard-show-shortcuts nil)
+	   (setq dashboard-items '((recents  . 5)
+							   (projects . 5)
+							   (agenda . 5))))
+   #+END_SRC
+** Relative Numbers
+   Vim like relative numbers
+   #+BEGIN_SRC emacs-lisp
+	 (defun line-number ()
+	   "Display liner numbers"
+	   (interactive )
+	   (line-number-mode t)
+	   (setq display-line-numbers t))
+
+	 (add-hook 'c-mode 'line-number)
+
+	 (setq-default display-line-numbers 'visual
+				   display-line-numbers-widen t
+				   display-line-numbers-current-absolute t)
+
+	 (defun noct:relative ()
+	   (setq-local display-line-numbers 'visual))
+
+	 (defun noct:absolute ()
+	   (setq-local display-line-numbers t))
+
+	 (add-hook 'evil-insert-state-entry-hook #'noct:absolute)
+	 (add-hook 'evil-insert-state-exit-hook #'noct:relative)
+   #+END_SRC
+* General
+** General
+   #+BEGIN_SRC emacs-lisp
+	 (setq-default indent-tabs-mode t)
+	 (setq tab-width 4) ; or any other preferred value
+	 (defvaralias 'c-basic-offset 'tab-width)
+
+	 ;; Local LISP
+	 (add-to-list 'load-path "~/.emacs.d/lisp/")
+
+	 ;; Ask
+	 (defalias 'yes-or-no-p 'y-or-n-p)
+
+	 ;; Ring
+	 (setq ring-bell-function 'ignore)
+
+	 (defvar my-shell "/bin/bash")
+	 (defadvice ansi-term (before force-bash)
+	   (interactive (list my-shell)))
+	 (ad-activate 'ansi-term)
+
+	 ;; Disable backup
+	 (setq backup-inhibited t)
+
+	 ;; Disable auto save
+	 (setq auto-save-default nil)
+   #+END_SRC
+** Modes
+*** Org
+	#+BEGIN_SRC emacs-lisp
+	  (setq org-src-window-setup 'current-window)
+
+	  (add-to-list 'org-structure-template-alist
+				   '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+
+	  (setq org-todo-keywords
+			'((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
+
+	  (use-package org-bullets
+		:ensure t
+		:config
+		(add-hook 'org-mode-hook(lambda () (org-bullets-mode))))
+	#+END_SRC
+**** Org Export
+	  #+BEGIN_SRC emacs-lisp
+		(use-package ox-twbs
+		  :ensure t)
+	  #+END_SRC
+*** C
+	#+BEGIN_SRC emacs-lisp
+	  (setq c-default-style "bsd"
+			c-basic-offset 4)
+
+	  (setq-default c-basic-offset 4)
+	#+END_SRC
+***** Compilation
+	   #+BEGIN_SRC emacs-lisp
+(defun brian-compile-finish (buffer outstr)
+(unless (string-match "finished" outstr)
+(switch-to-buffer-other-window buffer))
+t)
+
+(setq compilation-finish-functions 'brian-compile-finish)
+
+(require 'cl)
+
+(defadvice compilation-start
+(around inhibit-display
+	(command &optional mode name-function highlight-regexp)) 
+(if (not (string-match "^\\(find\\|grep\\)" command))
+	(cl-flet ((display-buffer)
+		(set-window-point)
+		(goto-char)) 
+(fset 'display-buffer 'ignore)
+(fset 'goto-char 'ignore)
+(fset 'set-window-point 'ignore)
+(save-window-excursion 
+	ad-do-it))
+ad-do-it))
+
+(ad-activate 'compilation-start)
+	   #+END_SRC
+
+	   Themes, modeline, syntax hightlight and more
+
+* Window
+** I-DO
+*** General
+	#+BEGIN_SRC emacs-lisp
+(setq ido-enable-flex-matching nil)
+(setq ido-create-new-buffer 'always)
+(setq ido-everywhere t)
+(ido-mode 1)
+	#+END_SRC
+*** Vertical
+	#+BEGIN_SRC emacs-lisp
+  (use-package ido-vertical-mode
+	:ensure t
+	:init
+	(ido-vertical-mode 1))
+
+  (setq ido-vertical-define-keys 'C-n-and-C-p-only)
+	#+END_SRC
+** Ibuffer
+   #+BEGIN_SRC emacs-lisp
+   (setq ibuffer-saved-filter-groups
+		 (quote (("default"
+				  ("dired" (mode . dired-mode))
+				  ("programming" (or
+							  (mode . css-mode)
+							  (mode . html-mode)
+							  (mode . markdown-mode)
+							  (mode . org-mode)
+							  (mode . asm-mode)
+							  (mode . c-mode)
+							  (mode . prog-mode)))
+				  ("planner" (or
+							  (name . "^\\**Calendar\\**$")
+							  (name . "^diary$")
+							  (mode . muse-mode)))
+				  ("emacs" (or
+							(name . "^\\**dashboard\\**$")
+							(name . "^\\**scratch\\**$")
+							(name . "^\\**Messages\\**$")
+							(name . "^\\**elfeed-log\\**$")))
+				  ("feeds" (or
+						   (mode . message-mode)
+						   (mode . bbdb-mode)
+						   (mode . mail-mode)
+						   (mode . gnus-group-mode)
+						   (mode . gnus-summary-mode)
+						   (mode . gnus-article-mode)
+						   (mode . elfeed-search-mode)
+						   (mode . notmuch-hello-mode)
+						   (mode . notmuch-search-mode)
+						   (mode . notmuch-message-mode)
+						   (mode . notmuch-show-mode)
+						   (name . "^\\.bbdb$")
+						   (name . "^\\.newsrc-dribble")))))))
+
+   (add-hook 'ibuffer-mode-hook
+			 (lambda ()
+			   (ibuffer-auto-mode 1)
+			   (ibuffer-switch-to-saved-filter-groups "default")))
+
+  (setq ibuffer-expert t)
+  (setq ibuffer-show-empty-filter-groups nil)
+   #+END_SRC
+
+** Swith Window
+   #+BEGIN_SRC emacs-lisp
+  (use-package switch-window
+    :ensure t
+    :config
+    (setq switch-window-input-style 'minibuffer)
+    (setq switch-window-increase 4)
+    (setq switch-window-threshold 2)
+    :bind
+    ([remap other-window] . switch-window))
+
+    (global-subword-mode 1)
+   #+END_SRC
+* Package
+** Overall
+   #+BEGIN_SRC emacs-lisp
+	 (use-package hungry-delete
+	   :ensure t
+	   :config
+	   (global-hungry-delete-mode))
+
+	 (use-package sudo-edit
+	   :ensure t)
+
+	 (use-package hl-todo
+	   :ensure t
+	   :config
+	   (global-hl-todo-mode t))
+
+	 (use-package weechat
+	   :ensure t)
+
+	 ;; Email
+	 (use-package notmuch
+	   :ensure t
+	   :config 
+	   (autoload 'notmuch "notmuch" "notmuch mail" t))
+
+	 ;; RSS
+	 (use-package elfeed
+	   :ensure t)
+
+	 (use-package elfeed-org
+	   :ensure t
+	   :init (elfeed-org)
+	   :config
+	   (eval-after-load 'evil
+		 '(progn
+			(evil-make-overriding-map elfeed-search-mode-map 'normal)
+			(add-hook 'elfeed-search-mode-hook 'evil-normalize-keymaps)))
+	   (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org")))
+
+	 (use-package helpful
+	   :ensure t)
+
+	 ;; Instead of normal M-x
+	 (use-package smex
+	   :ensure t
+	   :init (smex-initialize)
+	   :bind ("M-x" . smex))
+
+	 (defun c/lisp-pair-mode ()
+	   (if (derived-mode-p 'c-mode)
+		   (setq electric-pair-pairs '(
+									   (?\( . ?\))
+									   (?\[ . ?\])
+									   (?\{ . ?\})
+									   (?\" . ?\")
+									   (?\' . ?\')
+									   ))
+		 (setq electric-pair-pairs '((?\( . ?\))))))
+
+	 (add-hook 'c-mode #'c/lisp-pair-mode)
+	 (electric-pair-mode t)
+
+	 (use-package which-key
+	   :ensure t
+	   :init
+	   (which-key-mode))
+   #+END_SRC
+** Evil
+   I'm evil, yes i am
+   #+BEGIN_SRC emacs-lisp
+	 (use-package evil
+	   :ensure t
+	   :init (evil-mode 1))
+
+	 (setq evil-emacs-state-modes nil)
+	 (setq evil-insert-state-modes nil)
+	 (setq evil-motion-state-modes nil)
+	 (setq evil-move-cursor-back nil)
+
+	 (define-key evil-normal-state-map (kbd "C-k") (lambda ()
+													 (interactive)
+													 (evil-scroll-up nil)))
+
+	 (define-key evil-normal-state-map (kbd "C-j") (lambda ()
+													 (interactive)
+													 (evil-scroll-down nil)))
+   #+END_SRC
+** WM
+*** EXWM
+	#+BEGIN_SRC emacs-lisp
+  ;(use-package exwm
+	;:ensure t
+	;:config
+	;(require 'exwm-systemtray)
+	;(exwm-systemtray-enable)
+	;(require 'exwm-config)
+	;(exwm-config-default))
+	#+END_SRC
+*** DMenu
+	#+BEGIN_SRC emacs-lisp
+  ;(use-package dmenu
+	 ;:ensure t)
+	#+END_SRC
+*** Modeline
+**** Geral
+	 #+BEGIN_SRC emacs-lisp
+;(use-package diminish
+  ;:ensure t
+  ;:init
+  ;(diminish 'which-key-mode)
+  ;(diminish 'undo-tree-mode)
+  ;(diminish 'subword-mode)
+  ;(diminish 'which-key-mode)
+  ;(diminish 'projectile-mode)
+  ;(diminish 'rainbow-mode))
+	 #+END_SRC
+**** Battery
+	 #+BEGIN_SRC emacs-lisp
+;(use-package fancy-battery
+   ;:ensure t
+   ;:config
+   ;(add-hook 'after-init-hook #'fancy-battery-mode)
+   ;(setq fancy-battery-mode-line
+	  ;'(:eval (unless (equal (cdr (assq ?b fancy-battery-last-status)) "+")
+					;(fancy-battery-default-mode-line))))
+;)
+	 #+END_SRC
+**** Clock
+	 #+BEGIN_SRC emacs-lisp
+;(defface egoge-display-time
+   ;'((((type x w32 mac))
+      ;;; #060525 is the background colour of my default face.
+      ;(:foreground "#ffffff" :inherit bold))
+     ;(((type tty))
+      ;(:foreground "white")))
+   ;"Face used to display the time in the mode line.")
+ ;;; This causes the current time in the mode line to be displayed in
+ ;;; `egoge-display-time-face' to make it stand out visually.
+ ;(setq display-time-string-forms
+       ;'((propertize (concat " " 24-hours ":" minutes " ")
+ 		    ;'face 'egoge-display-time)))
+;
+ ;(display-time-mode 1)
+	 #+END_SRC
+
+** EMMS
+   #+BEGIN_SRC emacs-lisp
+	 (use-package emms
+	   :ensure t
+	   :config
+	   (require 'emms-setup)
+	   (require 'emms-player-mpd)
+	   (emms-all) ; don't change this to values you see on stackoverflow questions if you expect emms to work
+	   (setq emms-seek-seconds 5)
+	   (setq emms-player-list '(emms-player-mpd))
+	   (setq emms-info-functions '(emms-info-mpd))
+	   (setq emms-player-mpd-server-name "localhost")
+	   (setq emms-player-mpd-server-port "6601"))
+
+	 (eval-after-load 'emms
+	   '(evil-set-initial-state 'emms-mode 'insert))
+
+	 (defun emms-setup-mpd ()
+	   "Start MPD, connects to it and syncs the metadata cache."
+	   (interactive)
+	   (emms-player-mpd-connect)
+	   (emms-cache-set-from-mpd-all)
+	   (message "MPD Started!"))
+   #+END_SRC
+** Magit
+   #+BEGIN_SRC emacs-lisp
+	 (use-package magit
+	   :ensure t)
+
+	 (eval-after-load 'magit
+	   '(evil-set-initial-state 'magit-popup-mode 'emacs))
+
+	 (use-package evil-magit
+	   :ensure t)
+
+	 (require 'dash)
+
+	 (defmacro pretty-magit (WORD ICON PROPS &optional NO-PROMPT?)
+	   "Replace sanitized WORD with ICON, PROPS and by default add to prompts."
+	   `(prog1
+			(add-to-list 'pretty-magit-alist
+						 (list (rx bow (group ,WORD (eval (if ,NO-PROMPT? "" ":"))))
+							   ,ICON ',PROPS))
+		  (unless ,NO-PROMPT?
+			(add-to-list 'pretty-magit-prompt (concat ,WORD ": ")))))
+
+	 (setq pretty-magit-alist nil)
+	 (setq pretty-magit-prompt nil)
+	 (pretty-magit "Feature" ? (:foreground "slate gray" :height 1.2))
+	 (pretty-magit "Add"     ? (:foreground "#375E97" :height 1.2))
+	 (pretty-magit "Fix"     ? (:foreground "#FB6542" :height 1.2))
+	 (pretty-magit "Clean"   ? (:foreground "#FFBB00" :height 1.2))
+	 (pretty-magit "Docs"    ? (:foreground "#3F681C" :height 1.2))
+	 (pretty-magit "master"  ? (:box t :height 1.2) t)
+	 (pretty-magit "origin"  ? (:box t :height 1.2) t)
+
+	 (defun add-magit-faces ()
+	   "Add face properties and compose symbols for buffer from pretty-magit."
+	   (interactive)
+	   (with-silent-modifications
+		 (--each pretty-magit-alist
+		   (-let (((rgx icon props) it))
+			 (save-excursion
+			   (goto-char (point-min))
+			   (while (search-forward-regexp rgx nil t)
+				 (compose-region
+				  (match-beginning 1) (match-end 1) icon)
+				 (when props
+				   (add-face-text-property
+					(match-beginning 1) (match-end 1) props))))))))
+
+	 (advice-add 'magit-status :after 'add-magit-faces)
+	 (advice-add 'magit-refresh-buffer :after 'add-magit-faces)
+
+	 (setq use-magit-commit-prompt-p nil)
+	 (defun use-magit-commit-prompt (&rest args)
+	   (setq use-magit-commit-prompt-p t))
+
+	 (defun magit-commit-prompt ()
+	   "Magit prompt and insert commit header with faces."
+	   (interactive)
+	   (when use-magit-commit-prompt-p
+		 (setq use-magit-commit-prompt-p nil)
+		 (insert (ivy-read "Commit Type " pretty-magit-prompt
+						   :require-match t :sort t :preselect "Add: "))
+		 ;; Or if you are using Helm...
+		 ;; (insert (helm :sources (helm-build-sync-source "Commit Type "
+		 ;;                          :candidates pretty-magit-prompt)
+		 ;;               :buffer "**magit cmt prompt**"))
+		 ;; I haven't tested this but should be simple to get the same behaior
+		 (add-magit-faces)
+		 (evil-insert 1)  ; If you use evil
+		 ))
+
+	 (remove-hook 'git-commit-setup-hook 'with-editor-usage-message)
+	 (add-hook 'git-commit-setup-hook 'magit-commit-prompt)
+	 (advice-add 'magit-commit :after 'use-magit-commit-prompt)
+   #+END_SRC
+* Auto Completion
+  Keep good company
+  #+BEGIN_SRC emacs-lisp
+	(use-package company
+	  :ensure t
+	  :config
+	  (add-hook 'after-init-hook 'global-company-mode)
+	  (setq company-idle-delay 0)
+	  (setq company-minimum-prefix-lenght 3))
+
+	(with-eval-after-load 'company
+	  (define-key company-active-map (kbd "M-n") 'nil)
+	  (define-key company-active-map (kbd "M-p") 'nil)
+	  (define-key company-active-map (kbd "C-n") 'company-select-next)
+	  (define-key company-active-map (kbd "C-p") 'company-select-previous))
+
+	(use-package company-irony
+	  :ensure t
+	  :config
+	  (require 'company)
+	  (add-to-list 'company-backends 'company-irony))
+
+	(use-package irony
+	  :ensure t
+	  :config
+	  (add-hook 'c++-mode-hook 'irony-mode)
+	  (add-hook 'c-mode-hook 'irony-mode)
+	  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+
+	(with-eval-after-load 'company
+	  (add-hook 'c++-mode-hook 'company-mode)
+	  (add-hook 'c-mode-hook 'company-mode))
+
+	(use-package yasnippet
+	  :ensure t
+	  :config
+	  (use-package yasnippet-snippets
+		:ensure t)
+	  (yas-reload-all))
+
+	(require 'yasnippet)
+	(yas-global-mode 1)
+
+	(use-package eldoc
+	  :ensure t
+	  :diminish eldoc-mode
+	  :init (add-hook 'ycmd-mode-hook 'ycmd-eldoc-setup))
+  #+END_SRC
+* Keybinds
+** Binds
+   Lazyness
+   #+BEGIN_SRC emacs-lisp
+	 ;; TODO: use use-package
+	 (require 'custom-binds)
+	 (require 'general)
+
+	 (global-set-key (kbd "s-d") 'dmenu)
+	 (global-set-key (kbd "s-k") 'exwm-workspace-delete)
+	 (global-set-key (kbd "s-o") 'exwm-workspace-swap)
+	 (global-set-key (kbd "M-x") 'smex)
+
+	 (general-define-key
+	  :states '(normal emacs)
+	  :prefix "SPC"
+	  :non-normal-prefix "C-SPC"
+ 
+	  ;; simple command
+	  "RET" 'eshell
+	  "xx" 'smex
+ 
+	  ;; Config
+	  "cr" 'config-reload
+	  "ce" 'config-visit
+ 
+	  ;; Files
+	  "f"  'ido-find-file
+	  "F"  'dired
+	  "se" 'sudo-edit
+ 
+	  ;; Buffers
+	  "k"  'kill-current-buffer
+	  "K"  'kill-all-buffers
+	  "b"  'ido-switch-buffer
+	  "xb" 'ibuffer
+ 
+	  ;; Windows
+	  "wo" 'switch-window
+ 
+	  "wv" 'split-and-fallow-v
+	  "wh" 'split-and-fallow-h
+ 
+	  "wk" 'delete-window
+	  "wd" 'delete-other-windows
+ 
+	  ;; Programming
+	  "'"  'org-edit-special
+	  "\"" 'org-edit-src-exit
+	  "e" 'eval-last-sexp
+	  "\\" 'swiper
+ 
+	  "c'" 'org-edit-special
+	  "cp" 'org-latex-export-to-pdf
+ 
+	  "cc" 'projectile-compile-project
+	  "gg" 'magit-status
+ 
+	  ;; Org
+	  "oa" 'org-agenda
+	  "o[" 'org-agenda-file-to-front
+	  "o]" 'org-remove-file
+	  "o." 'org-agenda-time-stamp
+	  "oc." 'org-time-stamp
+	  "od" 'org-deadline
+	  "os" 'org-schedule
+ 
+	  ;; EMMS
+	  "mm" 'emms
+	  "mb" 'emms-smart-browse
+	  "mr" 'emms-player-mpd-update-all-reset-cache
+ 
+	  "ms" 'emms-setup-mpd
+	  "mS" 'emms-stop
+ 
+	  "mp" 'emms-previous
+	  "mn" 'emms-next
+	  "mP" 'emms-pause
+ 
+	  ;; RSS & Mail
+	  "nmm" 'notmuch
+	  "nmd" 'notmuch-delete-tagged
+	  "nf" 'elfeed
+ 
+	  ;; Help
+	  "hk" 'helpful-key
+	  "hf" 'helpful-function
+ 
+	  "hy" 'yas-describe-tables
+	  )
+   #+END_SRC
+** Unbinds
+   #+BEGIN_SRC emacs-lisp
+	 (global-set-key (kbd "C-x b") 'nil)
+	 (global-set-key (kbd "C-x k") 'nil)
+	 (global-set-key (kbd "C-x C-b") 'nil)
+	 (global-set-key (kbd "C-x C-e") 'nil)
+
+	 (global-set-key (kbd "C-x 1") 'nil)
+	 (global-set-key (kbd "C-x 2") 'nil)
+	 (global-set-key (kbd "C-x 3") 'nil)
+	 (global-set-key (kbd "C-x 0") 'nil)
+	 (global-set-key (kbd "C-x o") 'nil)
+
+	 (global-set-key (kbd "C-g") 'nil)
+
+	 (global-set-key (kbd "C-h k") 'nil)
+	 (global-set-key (kbd "C-h f") 'nil)
+
+	 (global-set-key (kbd "C-a") 'nil)
+	 (global-set-key (kbd "C-[") 'nil)
+	 (global-set-key (kbd "C-]") 'nil)
+	 (global-set-key (kbd "C-c .") 'nil)
+	 (global-set-key (kbd "C-d") 'nil)
+	 (global-set-key (kbd "C-s") 'nil)
+   #+END_SRC
