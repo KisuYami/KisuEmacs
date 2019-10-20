@@ -2,9 +2,9 @@
 [[./img/kisuemacs.png]]
 
 * Install
-  Just run:
+Just run:
 #+begin_example
-  git https://github.com/KisuYami/KisuEmacs.git ~/.emacs.d/
+git https://github.com/KisuYami/KisuEmacs.git ~/.emacs.d/
 #+end_example
 ** Dependencies
    You may need:
@@ -12,29 +12,29 @@
    - mbsync
 * Visual
 ** Theme
-   A confy theme
+A confy theme
 #+BEGIN_SRC emacs-lisp
-	 (use-package doom-themes
-	   :ensure t
-	   :config
-	   (load-theme 'doom-one t)
-	   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-			 doom-themes-enable-italic t) ; if nil, italics is universally disabled
-	   (doom-themes-org-config))
+  (use-package doom-themes
+    :ensure t
+    :config
+    (load-theme 'doom-one t)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    (doom-themes-org-config))
 
-	 (use-package doom-modeline
-	   :ensure t
-	   :init
-	   :hook (after-init . doom-modeline-mode))
+  (use-package doom-modeline
+    :ensure t
+    :init
+    :hook (after-init . doom-modeline-mode))
 
-	 (use-package diminish
-	   :ensure t
-	   :init
-	   (diminish 'which-key-mode)
-	   (diminish 'undo-tree-mode)
-	   (diminish 'subword-mode)
-	   (diminish 'which-key-mode)
-	   (diminish 'rainbow-mode))
+  (use-package diminish
+    :ensure t
+    :init
+    (diminish 'which-key-mode)
+    (diminish 'undo-tree-mode)
+    (diminish 'subword-mode)
+    (diminish 'which-key-mode)
+    (diminish 'rainbow-mode))
 #+END_SRC
 ** Overall
    Remove everything that reminds me of a GUI
@@ -83,30 +83,6 @@
 							   (projects . 5)
 							   (agenda . 5))))
    #+END_SRC
-** Relative Numbers
-   Vim like relative numbers
-   #+BEGIN_SRC emacs-lisp
-	 (defun line-number ()
-	   "Display liner numbers"
-	   (interactive )
-	   (line-number-mode t)
-	   (setq display-line-numbers t))
-
-	 (add-hook 'c-mode 'line-number)
-
-	 (setq-default display-line-numbers 'visual
-				   display-line-numbers-widen t
-				   display-line-numbers-current-absolute t)
-
-	 (defun noct:relative ()
-	   (setq-local display-line-numbers 'visual))
-
-	 (defun noct:absolute ()
-	   (setq-local display-line-numbers t))
-
-	 (add-hook 'evil-insert-state-entry-hook #'noct:absolute)
-	 (add-hook 'evil-insert-state-exit-hook #'noct:relative)
-   #+END_SRC
 * General
 ** General
    #+BEGIN_SRC emacs-lisp
@@ -137,7 +113,13 @@
 ** Modes
 *** Org
 	#+BEGIN_SRC emacs-lisp
+	  (setq org-ellipsis " ")
+	  (setq org-src-fontify-natively t)
+	  (setq org-src-tab-acts-natively t)
+	  (setq org-confirm-babel-evaluate nil)
+	  (setq org-export-with-smart-quotes t)
 	  (setq org-src-window-setup 'current-window)
+	  (add-hook 'org-mode-hook 'org-indent-mode)
 
 	  (add-to-list 'org-structure-template-alist
 				   '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
@@ -272,72 +254,74 @@ ad-do-it))
 * Package
 ** Overall
    #+BEGIN_SRC emacs-lisp
-	 (use-package hungry-delete
-	   :ensure t
-	   :config
-	   (global-hungry-delete-mode))
+          (use-package hungry-delete
+            :ensure t
+            :config
+            (global-hungry-delete-mode))
 
-	 (use-package sudo-edit
-	   :ensure t)
+          (use-package sudo-edit
+            :ensure t)
 
-	 (use-package hl-todo
-	   :ensure t
-	   :config
-	   (global-hl-todo-mode t))
+          (use-package hl-todo
+            :ensure t
+            :config
+            (global-hl-todo-mode t))
 
-	 (use-package weechat
-	   :ensure t)
+          (use-package weechat
+            :ensure t)
 
-	 ;; Email
-	 (use-package notmuch
-	   :ensure t
-	   :config 
-	   (autoload 'notmuch "notmuch" "notmuch mail" t))
+          ;; Email
+          (use-package notmuch
+            :ensure t
+            :config 
+            (autoload 'notmuch "notmuch" "notmuch mail" t))
 
-	 ;; RSS
-	 (use-package elfeed
-	   :ensure t)
+          ;; RSS
+          (use-package elfeed
+            :ensure t)
 
-	 (use-package elfeed-org
-	   :ensure t
-	   :init (elfeed-org)
-	   :config
-	   (eval-after-load 'evil
-		 '(progn
-			(evil-make-overriding-map elfeed-search-mode-map 'normal)
-			(add-hook 'elfeed-search-mode-hook 'evil-normalize-keymaps)))
-	   (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org")))
+          (use-package elfeed-org
+            :ensure t
+            :init (elfeed-org)
+            :config
+            (eval-after-load 'evil
+              '(progn
+                 (evil-make-overriding-map elfeed-search-mode-map 'normal)
+                 (add-hook 'elfeed-search-mode-hook 'evil-normalize-keymaps)))
+            (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org")))
 
-	 (use-package helpful
-	   :ensure t)
+          (use-package helpful
+            :ensure t)
 
-	 ;; Instead of normal M-x
-	 (use-package smex
-	   :ensure t
-	   :init (smex-initialize)
-	   :bind ("M-x" . smex))
+          ;; Instead of normal M-x
+          (use-package smex
+            :ensure t
+            :init (smex-initialize)
+            :bind ("M-x" . smex))
 
-	 (defun c/lisp-pair-mode ()
-	   (if (derived-mode-p 'c-mode)
-		   (setq electric-pair-pairs '(
-									   (?\( . ?\))
-									   (?\[ . ?\])
-									   (?\{ . ?\})
-									   (?\" . ?\")
-									   (?\' . ?\')
-									   ))
-		 (setq electric-pair-pairs '((?\( . ?\))))))
+          (defun c/lisp-pair-mode ()
+            (if (derived-mode-p 'c-mode)
+                (setq electric-pair-pairs '(
+                                            (?\( . ?\))
+                                            (?\[ . ?\])
+                                            (?\{ . ?\})
+                                            (?\" . ?\")
+                                            (?\' . ?\')
+                                            ))
+              (setq electric-pair-pairs '((?\( . ?\))))))
 
-	 (add-hook 'c-mode #'c/lisp-pair-mode)
-	 (electric-pair-mode t)
+          (add-hook 'c-mode #'c/lisp-pair-mode)
+          (electric-pair-mode t)
 
-	 (use-package which-key
-	   :ensure t
-	   :init
-	   (which-key-mode))
+          (use-package which-key
+            :ensure t
+            :init
+            (which-key-mode))
+     (use-package elcord
+       :ensure t)
    #+END_SRC
 ** Evil
-   I'm evil, yes i am
+I'm evil, yes i am
    #+BEGIN_SRC emacs-lisp
 	 (use-package evil
 	   :ensure t
@@ -359,59 +343,58 @@ ad-do-it))
 ** WM
 *** EXWM
 	#+BEGIN_SRC emacs-lisp
-  ;(use-package exwm
-	;:ensure t
-	;:config
-	;(require 'exwm-systemtray)
-	;(exwm-systemtray-enable)
-	;(require 'exwm-config)
-	;(exwm-config-default))
+      ;(use-package exwm
+        ;:ensure t
+        ;:config
+        ;(require 'exwm-systemtray)
+        ;(exwm-systemtray-enable)
+        ;(require 'exwm-config)
+        ;(exwm-config-default))
 	#+END_SRC
 *** DMenu
 	#+BEGIN_SRC emacs-lisp
-  ;(use-package dmenu
-	 ;:ensure t)
+      ;(use-package dmenu
+         ;:ensure t)
 	#+END_SRC
 *** Modeline
 **** Geral
 	 #+BEGIN_SRC emacs-lisp
-;(use-package diminish
-  ;:ensure t
-  ;:init
-  ;(diminish 'which-key-mode)
-  ;(diminish 'undo-tree-mode)
-  ;(diminish 'subword-mode)
-  ;(diminish 'which-key-mode)
-  ;(diminish 'projectile-mode)
-  ;(diminish 'rainbow-mode))
+       (use-package diminish
+         :ensure t
+         :init
+         (diminish 'which-key-mode)
+         (diminish 'undo-tree-mode)
+         (diminish 'subword-mode)
+         (diminish 'which-key-mode)
+         (diminish 'projectile-mode)
+         (diminish 'rainbow-mode))
 	 #+END_SRC
 **** Battery
 	 #+BEGIN_SRC emacs-lisp
-;(use-package fancy-battery
-   ;:ensure t
-   ;:config
-   ;(add-hook 'after-init-hook #'fancy-battery-mode)
-   ;(setq fancy-battery-mode-line
-	  ;'(:eval (unless (equal (cdr (assq ?b fancy-battery-last-status)) "+")
-					;(fancy-battery-default-mode-line))))
-;)
+       ;(use-package fancy-battery
+          ;:ensure t
+          ;:config
+          ;(add-hook 'after-init-hook #'fancy-battery-mode)
+          ;(setq fancy-battery-mode-line
+             ;'(:eval (unless (equal (cdr (assq ?b fancy-battery-last-status)) "+")
+                           ;(fancy-battery-default-mode-line)))))
 	 #+END_SRC
 **** Clock
 	 #+BEGIN_SRC emacs-lisp
-;(defface egoge-display-time
-   ;'((((type x w32 mac))
-      ;;; #060525 is the background colour of my default face.
-      ;(:foreground "#ffffff" :inherit bold))
-     ;(((type tty))
-      ;(:foreground "white")))
-   ;"Face used to display the time in the mode line.")
- ;;; This causes the current time in the mode line to be displayed in
- ;;; `egoge-display-time-face' to make it stand out visually.
- ;(setq display-time-string-forms
-       ;'((propertize (concat " " 24-hours ":" minutes " ")
- 		    ;'face 'egoge-display-time)))
-;
- ;(display-time-mode 1)
+       ;(defface egoge-display-time
+          ;'((((type x w32 mac))
+             ;;; #060525 is the background colour of my default face.
+             ;(:foreground "#ffffff" :inherit bold))
+            ;(((type tty))
+             ;(:foreground "white")))
+          ;"Face used to display the time in the mode line.")
+        ;;; This causes the current time in the mode line to be displayed in
+        ;;; `egoge-display-time-face' to make it stand out visually.
+        ;(setq display-time-string-forms
+              ;'((propertize (concat " " 24-hours ":" minutes " ")
+                   ;'face 'egoge-display-time)))
+
+        ;(display-time-mode 1)
 	 #+END_SRC
 
 ** EMMS
@@ -513,7 +496,7 @@ ad-do-it))
 	 (advice-add 'magit-commit :after 'use-magit-commit-prompt)
    #+END_SRC
 * Auto Completion
-  Keep good company
+Keep good company
   #+BEGIN_SRC emacs-lisp
 	(use-package company
 	  :ensure t
@@ -613,7 +596,6 @@ ad-do-it))
 	  "e" 'eval-last-sexp
 	  "\\" 'swiper
  
-	  "c'" 'org-edit-special
 	  "cp" 'org-latex-export-to-pdf
  
 	  "cc" 'projectile-compile-project
