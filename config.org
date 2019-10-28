@@ -83,6 +83,18 @@ A confy theme
 							   (projects . 5)
 							   (agenda . 5))))
    #+END_SRC
+** Modeline
+	 #+BEGIN_SRC emacs-lisp
+       (use-package diminish
+         :ensure t
+         :init
+         (diminish 'which-key-mode)
+         (diminish 'undo-tree-mode)
+         (diminish 'subword-mode)
+         (diminish 'which-key-mode)
+         (diminish 'projectile-mode)
+         (diminish 'rainbow-mode))
+	 #+END_SRC
 * General
 ** General
    #+BEGIN_SRC emacs-lisp
@@ -132,7 +144,7 @@ A confy theme
 		:config
 		(add-hook 'org-mode-hook(lambda () (org-bullets-mode))))
 	#+END_SRC
-**** Org Export
+*** Org Export
 	  #+BEGIN_SRC emacs-lisp
 		(use-package ox-twbs
 		  :ensure t)
@@ -144,7 +156,6 @@ A confy theme
 
 	  (setq-default c-basic-offset 4)
 	#+END_SRC
-***** Compilation
 	   #+BEGIN_SRC emacs-lisp
 (defun brian-compile-finish (buffer outstr)
 (unless (string-match "finished" outstr)
@@ -176,21 +187,18 @@ ad-do-it))
 
 * Window
 ** I-DO
-*** General
 	#+BEGIN_SRC emacs-lisp
-(setq ido-enable-flex-matching nil)
-(setq ido-create-new-buffer 'always)
-(setq ido-everywhere t)
-(ido-mode 1)
-	#+END_SRC
-*** Vertical
-	#+BEGIN_SRC emacs-lisp
-  (use-package ido-vertical-mode
-	:ensure t
-	:init
-	(ido-vertical-mode 1))
+      (setq ido-enable-flex-matching nil)
+      (setq ido-create-new-buffer 'always)
+      (setq ido-everywhere t)
+      (ido-mode 1)
 
-  (setq ido-vertical-define-keys 'C-n-and-C-p-only)
+        (use-package ido-vertical-mode
+          :ensure t
+          :init
+          (ido-vertical-mode 1))
+
+        (setq ido-vertical-define-keys 'C-n-and-C-p-only)
 	#+END_SRC
 ** Ibuffer
    #+BEGIN_SRC emacs-lisp
@@ -340,87 +348,6 @@ I'm evil, yes i am
 													 (interactive)
 													 (evil-scroll-down nil)))
    #+END_SRC
-** WM
-*** EXWM
-	#+BEGIN_SRC emacs-lisp
-      ;(use-package exwm
-        ;:ensure t
-        ;:config
-        ;(require 'exwm-systemtray)
-        ;(exwm-systemtray-enable)
-        ;(require 'exwm-config)
-        ;(exwm-config-default))
-	#+END_SRC
-*** DMenu
-	#+BEGIN_SRC emacs-lisp
-      ;(use-package dmenu
-         ;:ensure t)
-	#+END_SRC
-*** Modeline
-**** Geral
-	 #+BEGIN_SRC emacs-lisp
-       (use-package diminish
-         :ensure t
-         :init
-         (diminish 'which-key-mode)
-         (diminish 'undo-tree-mode)
-         (diminish 'subword-mode)
-         (diminish 'which-key-mode)
-         (diminish 'projectile-mode)
-         (diminish 'rainbow-mode))
-	 #+END_SRC
-**** Battery
-	 #+BEGIN_SRC emacs-lisp
-       ;(use-package fancy-battery
-          ;:ensure t
-          ;:config
-          ;(add-hook 'after-init-hook #'fancy-battery-mode)
-          ;(setq fancy-battery-mode-line
-             ;'(:eval (unless (equal (cdr (assq ?b fancy-battery-last-status)) "+")
-                           ;(fancy-battery-default-mode-line)))))
-	 #+END_SRC
-**** Clock
-	 #+BEGIN_SRC emacs-lisp
-       ;(defface egoge-display-time
-          ;'((((type x w32 mac))
-             ;;; #060525 is the background colour of my default face.
-             ;(:foreground "#ffffff" :inherit bold))
-            ;(((type tty))
-             ;(:foreground "white")))
-          ;"Face used to display the time in the mode line.")
-        ;;; This causes the current time in the mode line to be displayed in
-        ;;; `egoge-display-time-face' to make it stand out visually.
-        ;(setq display-time-string-forms
-              ;'((propertize (concat " " 24-hours ":" minutes " ")
-                   ;'face 'egoge-display-time)))
-
-        ;(display-time-mode 1)
-	 #+END_SRC
-
-** EMMS
-   #+BEGIN_SRC emacs-lisp
-	 (use-package emms
-	   :ensure t
-	   :config
-	   (require 'emms-setup)
-	   (require 'emms-player-mpd)
-	   (emms-all) ; don't change this to values you see on stackoverflow questions if you expect emms to work
-	   (setq emms-seek-seconds 5)
-	   (setq emms-player-list '(emms-player-mpd))
-	   (setq emms-info-functions '(emms-info-mpd))
-	   (setq emms-player-mpd-server-name "localhost")
-	   (setq emms-player-mpd-server-port "6601"))
-
-	 (eval-after-load 'emms
-	   '(evil-set-initial-state 'emms-mode 'insert))
-
-	 (defun emms-setup-mpd ()
-	   "Start MPD, connects to it and syncs the metadata cache."
-	   (interactive)
-	   (emms-player-mpd-connect)
-	   (emms-cache-set-from-mpd-all)
-	   (message "MPD Started!"))
-   #+END_SRC
 ** Magit
    #+BEGIN_SRC emacs-lisp
 	 (use-package magit
@@ -545,117 +472,83 @@ Keep good company
 	  :init (add-hook 'ycmd-mode-hook 'ycmd-eldoc-setup))
   #+END_SRC
 * Keybinds
-** Binds
    Lazyness
    #+BEGIN_SRC emacs-lisp
-	 ;; TODO: use use-package
-	 (require 'custom-binds)
-	 (require 'general)
+     ;; TODO: use use-package
+     (require 'custom-binds)
+     (require 'general)
 
-	 (global-set-key (kbd "s-d") 'dmenu)
-	 (global-set-key (kbd "s-k") 'exwm-workspace-delete)
-	 (global-set-key (kbd "s-o") 'exwm-workspace-swap)
-	 (global-set-key (kbd "M-x") 'smex)
+     ;; Unbind Everything
+     (dolist (key '("\C-a" "\C-b" "\C-c" "\C-d" "\C-e" "\C-f" "\C-g"
+                    "\C-h" "\C-k" "\C-l" "\C-n" "\C-o" "\C-p" "\C-q"
+                    "\C-t" "\C-u" "\C-v" "\C-x" "\C-z" "\e"))
+       (global-unset-key key))
 
-	 (general-define-key
-	  :states '(normal emacs)
-	  :prefix "SPC"
-	  :non-normal-prefix "C-SPC"
- 
-	  ;; simple command
-	  "RET" 'eshell
-	  "xx" 'smex
- 
-	  ;; Config
-	  "cr" 'config-reload
-	  "ce" 'config-visit
- 
-	  ;; Files
-	  "f"  'ido-find-file
-	  "F"  'dired
-	  "se" 'sudo-edit
- 
-	  ;; Buffers
-	  "k"  'kill-current-buffer
-	  "K"  'kill-all-buffers
-	  "b"  'ido-switch-buffer
-	  "xb" 'ibuffer
- 
-	  ;; Windows
-	  "wo" 'switch-window
- 
-	  "wv" 'split-and-fallow-v
-	  "wh" 'split-and-fallow-h
- 
-	  "wk" 'delete-window
-	  "wd" 'delete-other-windows
- 
-	  ;; Programming
-	  "'"  'org-edit-special
-	  "\"" 'org-edit-src-exit
-	  "e" 'eval-last-sexp
-	  "\\" 'swiper
- 
-	  "cp" 'org-latex-export-to-pdf
- 
-	  "cc" 'projectile-compile-project
-	  "gg" 'magit-status
- 
-	  ;; Org
-	  "oa" 'org-agenda
-	  "o[" 'org-agenda-file-to-front
-	  "o]" 'org-remove-file
-	  "o." 'org-agenda-time-stamp
-	  "oc." 'org-time-stamp
-	  "od" 'org-deadline
-	  "os" 'org-schedule
- 
-	  ;; EMMS
-	  "mm" 'emms
-	  "mb" 'emms-smart-browse
-	  "mr" 'emms-player-mpd-update-all-reset-cache
- 
-	  "ms" 'emms-setup-mpd
-	  "mS" 'emms-stop
- 
-	  "mp" 'emms-previous
-	  "mn" 'emms-next
-	  "mP" 'emms-pause
- 
-	  ;; RSS & Mail
-	  "nmm" 'notmuch
-	  "nmd" 'notmuch-delete-tagged
-	  "nf" 'elfeed
- 
-	  ;; Help
-	  "hk" 'helpful-key
-	  "hf" 'helpful-function
- 
-	  "hy" 'yas-describe-tables
-	  )
-   #+END_SRC
-** Unbinds
-   #+BEGIN_SRC emacs-lisp
-	 (global-set-key (kbd "C-x b") 'nil)
-	 (global-set-key (kbd "C-x k") 'nil)
-	 (global-set-key (kbd "C-x C-b") 'nil)
-	 (global-set-key (kbd "C-x C-e") 'nil)
+     (global-set-key (kbd "s-d") 'dmenu)
+     (global-set-key (kbd "M-x") 'smex)
 
-	 (global-set-key (kbd "C-x 1") 'nil)
-	 (global-set-key (kbd "C-x 2") 'nil)
-	 (global-set-key (kbd "C-x 3") 'nil)
-	 (global-set-key (kbd "C-x 0") 'nil)
-	 (global-set-key (kbd "C-x o") 'nil)
+     (general-define-key
+      :states '(normal emacs)
+      :prefix "SPC"
+      :non-normal-prefix "C-SPC"
 
-	 (global-set-key (kbd "C-g") 'nil)
+      ;; simple command
+      "RET" 'eshell
+      "xx" 'smex
 
-	 (global-set-key (kbd "C-h k") 'nil)
-	 (global-set-key (kbd "C-h f") 'nil)
+      ;; Config
+      "cr" 'config-reload
+      "ce" 'config-visit
 
-	 (global-set-key (kbd "C-a") 'nil)
-	 (global-set-key (kbd "C-[") 'nil)
-	 (global-set-key (kbd "C-]") 'nil)
-	 (global-set-key (kbd "C-c .") 'nil)
-	 (global-set-key (kbd "C-d") 'nil)
-	 (global-set-key (kbd "C-s") 'nil)
+      ;; Files
+      "f"  'ido-find-file
+      "F"  'dired
+      "se" 'sudo-edit
+
+      ;; Buffers
+      "k"  'kill-current-buffer
+      "K"  'kill-all-buffers
+      "b"  'ido-switch-buffer
+      "xb" 'ibuffer
+
+      ;; Windows
+      "wo" 'switch-window
+
+      "wv" 'split-and-fallow-v
+      "wh" 'split-and-fallow-h
+
+      "wk" 'delete-window
+      "wd" 'delete-other-windows
+
+      ;; Programming
+      "'"  'org-edit-special
+      "\"" 'org-edit-src-exit
+      "e" 'eval-last-sexp
+      "\\" 'swiper
+
+      "cp" 'org-latex-export-to-pdf
+
+      "cc" 'projectile-compile-project
+      "gg" 'magit-status
+
+      ;; Org
+      "oa" 'org-agenda
+      "o[" 'org-agenda-file-to-front
+      "o]" 'org-remove-file
+      "o." 'org-agenda-time-stamp
+      "oc." 'org-time-stamp
+      "od" 'org-deadline
+      "os" 'org-schedule
+
+      ;; RSS & Mail
+      "mm" 'notmuch
+      "md" 'notmuch-delete-tagged
+      "mn" 'elfeed
+
+      ;; Help
+      "hk" 'helpful-key
+      "hf" 'helpful-function
+
+      "hy" 'yas-describe-tables
+      )
    #+END_SRC
