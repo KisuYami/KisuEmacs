@@ -4,8 +4,6 @@
 *** http://feeds.feedburner.com/TheHackersNews?format=xml
 ** Linux/Distros
 *** https://news.opensuse.org/feed/
-*** https://www.novell.com/newsfeeds/rss/patches/patch_notifications-daily.xml
-*** https://www.archlinux.org/feeds/news/
 * Youtube
 ** General
 *** https://www.youtube.com/feeds/videos.xml?channel_id=UCTU7zMqyCsIcaYWwtjemYoQ :Bizonacci:
