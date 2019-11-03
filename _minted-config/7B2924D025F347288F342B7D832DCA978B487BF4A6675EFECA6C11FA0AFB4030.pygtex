@@ -1,0 +1,27 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nv}{setq\PYGZhy{}default} \PYG{n+nv}{indent\PYGZhy{}tabs\PYGZhy{}mode} \PYG{n+no}{t}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{tab\PYGZhy{}width} \PYG{l+m+mi}{4}\PYG{p}{)} \PYG{c+c1}{; or any other preferred value}
+\PYG{p}{(}\PYG{n+nv}{defvaralias} \PYG{l+s+ss}{\PYGZsq{}c\PYGZhy{}basic\PYGZhy{}offset} \PYG{l+s+ss}{\PYGZsq{}tab\PYGZhy{}width}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nb}{defvar} \PYG{n+nv}{my\PYGZhy{}shell} \PYG{l+s}{\PYGZdq{}/bin/bash\PYGZdq{}}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{defadvice} \PYG{n+nv}{ansi\PYGZhy{}term} \PYG{p}{(}\PYG{n+nv}{before} \PYG{n+nv}{force\PYGZhy{}bash}\PYG{p}{)}
+  \PYG{p}{(}\PYG{n+nv}{interactive} \PYG{p}{(}\PYG{n+nb}{list} \PYG{n+nv}{my\PYGZhy{}shell}\PYG{p}{)))}
+\PYG{p}{(}\PYG{n+nv}{ad\PYGZhy{}activate} \PYG{l+s+ss}{\PYGZsq{}ansi\PYGZhy{}term}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nv}{defvaralias} \PYG{l+s+ss}{\PYGZsq{}c\PYGZhy{}basic\PYGZhy{}offset} \PYG{l+s+ss}{\PYGZsq{}tab\PYGZhy{}width}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{setq\PYGZhy{}default} \PYG{n+nv}{indent\PYGZhy{}tabs\PYGZhy{}mode} \PYG{n+no}{t}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{tab\PYGZhy{}width} \PYG{l+m+mi}{4}\PYG{p}{)} \PYG{c+c1}{; or any other preferred value}
+
+\PYG{c+c1}{;; Local LISP}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list} \PYG{l+s+ss}{\PYGZsq{}load\PYGZhy{}path} \PYG{l+s}{\PYGZdq{}\PYGZti{}/.emacs.d/lisp/\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c+c1}{;; Ask}
+\PYG{p}{(}\PYG{n+nv}{defalias} \PYG{l+s+ss}{\PYGZsq{}yes\PYGZhy{}or\PYGZhy{}no\PYGZhy{}p} \PYG{l+s+ss}{\PYGZsq{}y\PYGZhy{}or\PYGZhy{}n\PYGZhy{}p}\PYG{p}{)}
+
+\PYG{c+c1}{;; Ring}
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{ring\PYGZhy{}bell\PYGZhy{}function} \PYG{l+s+ss}{\PYGZsq{}ignore}\PYG{p}{)}
+
+\PYG{c+c1}{;; Disable backup}
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{backup\PYGZhy{}inhibited} \PYG{n+no}{t}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{auto\PYGZhy{}save\PYGZhy{}default} \PYG{n+no}{nil}\PYG{p}{)}
+\end{Verbatim}

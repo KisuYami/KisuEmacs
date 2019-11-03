@@ -6,9 +6,11 @@
 *.pdf
 *.tex
 
+diary
 eshell
 network-security.data
 .python-environments
+.emacs_workgroups
 irony
 dmenu-items
 config.el

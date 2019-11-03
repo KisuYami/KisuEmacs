@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{;;anoying window\PYGZhy{}p nil}
+\PYG{p}{(}\PYG{n+nb}{use\PYGZhy{}package} \PYG{n+nv}{magit}
+  \PYG{l+s+ss}{:ensure} \PYG{n+no}{t}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nv}{eval\PYGZhy{}after\PYGZhy{}load} \PYG{l+s+ss}{\PYGZsq{}magit}
+  \PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{n+nv}{evil\PYGZhy{}set\PYGZhy{}initial\PYGZhy{}state} \PYG{l+s+ss}{\PYGZsq{}magit\PYGZhy{}popup\PYGZhy{}mode} \PYG{l+s+ss}{\PYGZsq{}emacs}\PYG{p}{))}
+
+\PYG{p}{(}\PYG{n+nb}{use\PYGZhy{}package} \PYG{n+nv}{evil\PYGZhy{}magit}
+  \PYG{l+s+ss}{:ensure} \PYG{n+no}{t}\PYG{p}{)}
+\end{Verbatim}

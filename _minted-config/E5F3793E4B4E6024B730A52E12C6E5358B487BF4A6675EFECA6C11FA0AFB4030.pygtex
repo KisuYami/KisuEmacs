@@ -1,0 +1,49 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nv}{general\PYGZhy{}define\PYGZhy{}key}
+ \PYG{l+s+ss}{:states} \PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{n+nv}{normal} \PYG{n+nv}{emacs}\PYG{p}{)}
+ \PYG{l+s+ss}{:prefix} \PYG{n+nv}{rcs/key\PYGZhy{}leader}
+ \PYG{l+s+ss}{:non\PYGZhy{}normal\PYGZhy{}prefix} \PYG{l+s}{\PYGZdq{}C\PYGZhy{}SPC\PYGZdq{}}
+
+ \PYG{c+c1}{;; Config}
+ \PYG{l+s}{\PYGZdq{}cr\PYGZdq{}} \PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{k}{lambda} \PYG{p}{()} \PYG{p}{(}\PYG{n+nv}{interactive}\PYG{p}{)} \PYG{p}{(}\PYG{n+nv}{org\PYGZhy{}babel\PYGZhy{}load\PYGZhy{}file} \PYG{p}{(}\PYG{n+nv}{expand\PYGZhy{}file\PYGZhy{}name} \PYG{l+s}{\PYGZdq{}\PYGZti{}/.emacs.d/config.org\PYGZdq{}}\PYG{p}{)))}
+ \PYG{l+s}{\PYGZdq{}ce\PYGZdq{}} \PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{k}{lambda} \PYG{p}{()} \PYG{p}{(}\PYG{n+nv}{interactive}\PYG{p}{)} \PYG{p}{(}\PYG{n+nv}{find\PYGZhy{}file} \PYG{l+s}{\PYGZdq{}\PYGZti{}/.emacs.d/config.org\PYGZdq{}}\PYG{p}{))}
+ \PYG{l+s}{\PYGZdq{}cf\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}indent\PYGZhy{}buffer}
+
+ \PYG{c+c1}{;; Files}
+ \PYG{l+s}{\PYGZdq{}su\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}sudo\PYGZhy{}edit}
+ \PYG{l+s}{\PYGZdq{}f\PYGZdq{}}  \PYG{l+s+ss}{\PYGZsq{}ido\PYGZhy{}find\PYGZhy{}file}
+ \PYG{l+s}{\PYGZdq{}F\PYGZdq{}}  \PYG{l+s+ss}{\PYGZsq{}dired}
+
+ \PYG{c+c1}{;; Buffers}
+ \PYG{l+s}{\PYGZdq{}k\PYGZdq{}}  \PYG{l+s+ss}{\PYGZsq{}kill\PYGZhy{}current\PYGZhy{}buffer}
+ \PYG{l+s}{\PYGZdq{}K\PYGZdq{}}  \PYG{l+s+ss}{\PYGZsq{}kill\PYGZhy{}all\PYGZhy{}buffers}
+ \PYG{l+s}{\PYGZdq{}b\PYGZdq{}}  \PYG{l+s+ss}{\PYGZsq{}ido\PYGZhy{}switch\PYGZhy{}buffer}
+ \PYG{l+s}{\PYGZdq{}xb\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}ibuffer}
+
+ \PYG{c+c1}{;; Windows}
+ \PYG{l+s}{\PYGZdq{}wo\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}switch\PYGZhy{}window}
+
+ \PYG{l+s}{\PYGZdq{}wv\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}split\PYGZhy{}and\PYGZhy{}fallow\PYGZhy{}v}
+ \PYG{l+s}{\PYGZdq{}wh\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}split\PYGZhy{}and\PYGZhy{}fallow\PYGZhy{}h}
+
+ \PYG{l+s}{\PYGZdq{}wk\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}delete\PYGZhy{}window}
+ \PYG{l+s}{\PYGZdq{}wd\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}delete\PYGZhy{}other\PYGZhy{}windows}
+
+ \PYG{c+c1}{;; Help}
+ \PYG{l+s}{\PYGZdq{}hk\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}helpful\PYGZhy{}key}
+ \PYG{l+s}{\PYGZdq{}hf\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}helpful\PYGZhy{}function}
+ \PYG{l+s}{\PYGZdq{}hx\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}describe\PYGZhy{}mode}
+ \PYG{l+s}{\PYGZdq{}ht\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}help\PYGZhy{}with\PYGZhy{}tutorial}
+ \PYG{l+s}{\PYGZdq{}hi\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}info}
+ \PYG{l+s}{\PYGZdq{}hy\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}yas\PYGZhy{}describe\PYGZhy{}tables}
+
+ \PYG{c+c1}{;; Magit}
+ \PYG{l+s}{\PYGZdq{}gg\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}magit}
+ \PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nv}{general\PYGZhy{}define\PYGZhy{}key}
+ \PYG{l+s+ss}{:states} \PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{n+nv}{normal} \PYG{n+nv}{emacs}\PYG{p}{)}
+ \PYG{l+s}{\PYGZdq{}C\PYGZhy{}k\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}evil\PYGZhy{}numbers/inc\PYGZhy{}at\PYGZhy{}pt}
+ \PYG{l+s}{\PYGZdq{}C\PYGZhy{}j\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}evil\PYGZhy{}numbers/dec\PYGZhy{}at\PYGZhy{}pt}
+ \PYG{p}{)}
+\end{Verbatim}

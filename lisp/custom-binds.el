@@ -19,7 +19,7 @@
   (other-window 1))
 
 ;; Config
-(defun config-visit()
+(defun config-visit ()
   "Open Config Files"
   (interactive)
   (find-file "~/.emacs.d/config.org"))
@@ -39,7 +39,6 @@
   (mapc 'kill-buffer (buffer-list)))
 
 ;; Email
-                                        ;"rm $(notmuch search --output=files --exclude=false tag:deleted)"
 (defun notmuch-delete-tagged ()
   "Delete emails tagged with deleted"
   (interactive)
@@ -62,3 +61,9 @@
     (delete-trailing-whitespace)
     (indent-region (point-min) (point-max) nil)
     (untabify (point-min) (point-max))))
+
+(defun create-tags (dir-name)
+  "Create tags file."
+  (interactive "DDirectory: ")
+  (eshell-command
+   (format "find %s -type f -name \"*.[ch]\" | etags -" dir-name)))

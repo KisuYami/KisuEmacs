@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{use\PYGZhy{}package} \PYG{n+nv}{doom\PYGZhy{}themes}
+  \PYG{l+s+ss}{:ensure} \PYG{n+no}{t}
+  \PYG{l+s+ss}{:config}
+  \PYG{p}{(}\PYG{n+nv}{load\PYGZhy{}theme} \PYG{l+s+ss}{\PYGZsq{}doom\PYGZhy{}one} \PYG{n+no}{t}\PYG{p}{)}
+  \PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{doom\PYGZhy{}themes\PYGZhy{}enable\PYGZhy{}bold} \PYG{n+no}{t}    \PYG{c+c1}{; if nil, bold is universally disabled}
+		\PYG{n+nv}{doom\PYGZhy{}themes\PYGZhy{}enable\PYGZhy{}italic} \PYG{n+no}{t}\PYG{p}{)} \PYG{c+c1}{; if nil, italics is universally disabled}
+  \PYG{p}{(}\PYG{n+nv}{doom\PYGZhy{}themes\PYGZhy{}org\PYGZhy{}config}\PYG{p}{))}
+\end{Verbatim}

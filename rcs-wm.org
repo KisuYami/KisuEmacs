@@ -1,0 +1,227 @@
+#+author: Reberti Carvalho Soares
+* Wm
+#+BEGIN_SRC emacs-lisp
+  (use-package exwm
+    :ensure t
+    :config
+    (require 'exwm-systemtray)
+    (exwm-systemtray-enable)
+    (require 'exwm-config)
+    (exwm-config-default)
+
+    ;; fringe size, most people prefer 1
+    (fringe-mode 3)
+
+    ;; this fixes issues with ido mode, if you use helm, get rid of it
+    (exwm-config-ido)
+
+    ;; a number between 1 and 9, exwm creates workspaces dynamically so I like starting out with 1
+    (setq exwm-workspace-number 1)
+
+    ;; this is a way to declare truly global/always working keybindings
+    ;; this is a nifty way to go back from char mode to line mode without using the mouse
+    (exwm-input-set-key (kbd "s-r") #'exwm-reset)
+    (exwm-input-set-key (kbd "s-k") #'exwm-workspace-delete)
+    (exwm-input-set-key (kbd "s-w") #'exwm-workspace-swap)
+
+    ;; the next loop will bind s-<number> to switch to the corresponding workspace
+    (dotimes (i 10)
+      (exwm-input-set-key (kbd (format "s-%d" i))
+                          `(lambda ()
+                             (interactive)
+                             (exwm-workspace-switch-create ,i))))
+
+
+    ;; the simplest launcher, I keep it in only if dmenu eventually stopped working or something
+    (exwm-input-set-key (kbd "s-d") 'dmenu)
+
+    ;; an easy way to make keybindings work *only* in line mode
+    (push ?\C-q exwm-input-prefix-keys)
+    (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+
+    ;; simulation keys are keys that exwm will send to the exwm buffer upon inputting a key combination
+    (exwm-input-set-simulation-keys
+     '(
+       ;; movement
+       ([?\C-b] . left)
+       ([?\M-b] . C-left)
+       ([?\C-f] . right)
+       ([?\M-f] . C-right)
+       ([?\C-p] . up)
+       ([?\C-n] . down)
+       ([?\C-a] . home)
+       ([?\C-e] . end)
+       ([?\M-v] . prior)
+       ([?\C-v] . next)
+       ([?\C-d] . delete)
+       ([?\C-k] . (S-end delete))
+       ;; cut/paste
+       ([?\C-w] . ?\C-x)
+       ([?\M-w] . ?\C-c)
+       ([?\C-y] . ?\C-v)
+       ;; search
+       ([?\C-s] . ?\C-f)))
+
+    ;; this little bit will make sure that XF86 keys work in exwm buffers as well
+    (dolist (k '(XF86AudioLowerVolume
+                 XF86AudioRaiseVolume
+                 XF86PowerOff
+                 XF86AudioMute
+                 XF86AudioPlay
+                 XF86AudioStop
+                 XF86AudioPrev
+                 XF86AudioNext
+                 XF86ScreenSaver
+                 XF68Back
+                 XF86Forward
+                 Scroll_Lock
+                 print))
+      (cl-pushnew k exwm-input-prefix-keys))
+
+    ;; this just enables exwm, it started automatically once everything is ready
+    )
+
+  ;; DMenu
+
+  (use-package dmenu
+    :ensure t)
+#+END_SRC
+
+* Brightness
+#+BEGIN_SRC emacs-lisp
+  (setq rcs/screen-brightness 0.5)
+
+  (defun rcs/set-screen-brightness (level)
+    "Set the screen brightness level"
+    (interactive "sBrightness Level? ")
+    (setq blevel (string-to-number level))
+    (if (> blevel 1)
+        (message "Number too big!")
+      (shell-command (concat "xrandr --output eDP-1 --brightness " level))))
+
+  (defun rcs/brightness-up ()
+    "Increment screen brightness level"
+    (interactive)
+    (setq rcs/screen-brightness (+ rcs/screen-brightness 0.1))
+    (if (> rcs/screen-brightness 1)
+        (setq rcs/screen-brightness (- rcs/screen-brightness 0.1))
+      (rcs/set-screen-brightness (number-to-string rcs/screen-brightness))))
+
+  (defun rcs/brightness-down ()
+    "Increment screen brightness level"
+    (interactive)
+    (setq rcs/screen-brightness (- rcs/screen-brightness 0.1))
+    (if (< rcs/screen-brightness 0.1)
+        (setq rcs/screen-brightness (+ rcs/screen-brightness 0.1))
+      (rcs/set-screen-brightness (number-to-string rcs/screen-brightness))))
+#+END_SRC
+
+* Programs
+#+BEGIN_SRC emacs-lisp
+  (defun exwm-async-run (name)
+    (interactive)
+    (start-process name nil name))
+
+  (defun daedreth/launch-discord ()
+    (interactive)
+    (exwm-async-run "discord"))
+
+  (defun daedreth/launch-browser ()
+    (interactive)
+    (exwm-async-run "firefox"))
+
+  (defun daedreth/lock-screen ()
+    (interactive)
+    (shell-command "lockscreen"))
+#+END_SRC
+
+(use-package symon
+:ensure t
+:bind
+("s-h" . symon-mode))
+
+* Keybindings
+#+BEGIN_SRC emacs-lisp
+  ;;These can be modified as well, suit yourself.
+  (global-set-key (kbd "s-d") 'daedreth/launch-discord)
+  (global-set-key (kbd "<s-tab>") 'daedreth/launch-browser)
+  (global-set-key (kbd "s-x") 'daedreth/lock-screen)
+
+  ;; Brightness
+  (exwm-input-set-key (kbd "<XF86MonBrightnessUp>") 'rcs/brightness-up)
+  (exwm-input-set-key (kbd "<XF86MonBrightnessDown>") 'rcs/brightness-down)
+
+  ;;Audio controls
+
+  (defconst volumeModifier "4")
+
+  ;;Functions to start processes
+  (defun audio/mute ()
+    (interactive)
+    (start-process "audio-mute" nil "pulsemixer" "--toggle-mute"))
+
+  (defun audio/raise-volume ()
+    (interactive)
+    (start-process "raise-volume" nil "pulsemixer" "--change-volume" (concat "+" volumeModifier)))
+
+  (defun audio/lower-volume ()
+    (interactive)
+    (start-process "lower-volume" nil "pulsemixer" "--change-volume" (concat "-" volumeModifier)))
+
+
+  ;;You can also change those if you’d like, but I highly recommend keeping ‘em the same, chances are, they will just work.
+  (exwm-input-set-key (kbd "<XF86AudioMute>") 'audio/mute)
+  (exwm-input-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
+  (exwm-input-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
+#+END_SRC
+* Modeline
+#+BEGIN_SRC emacs-lisp
+  ;; Battery
+  (use-package fancy-battery
+    :ensure t
+    :config
+    (setq fancy-battery-show-percentage t)
+    (setq battery-update-interval 15)
+    (if window-system
+        (fancy-battery-mode)
+      (display-battery-mode)))
+
+
+  ;; Clock
+  (defface egoge-display-time
+    '((((type x w32 mac))
+  ;;; #060525 is the background colour of my default face.
+       (:foreground "#ffffff" :inherit bold))
+      (((type tty))
+       (:foreground "white")))
+    "Face used to display the time in the mode line.")
+                                          ; This causes the current time in the mode line to be displayed in
+  `egoge-display-time-face' ;to make it stand out visually.
+  (setq display-time-string-forms
+        '((propertize (concat " " 24-hours ":" minutes " ")
+                      'face 'egoge-display-time)))
+
+  (display-time-mode 1)
+#+END_SRC
+
+* Music
+#+BEGIN_SRC emacs-lisp
+  (use-package emms
+    :ensure t
+    :config
+    (require 'emms-setup)
+    (require 'emms-player-mpd)
+    (emms-all) ; don't change this to values you see on stackoverflow questions if you expect emms to work
+    (setq emms-seek-seconds 5)
+    (setq emms-player-list '(emms-player-mpd))
+    (setq emms-info-functions '(emms-info-mpd))
+    (setq emms-player-mpd-server-name "localhost")
+    (setq emms-player-mpd-server-port "6601"))
+
+  (defun emms-setup-mpd ()
+    "Start MPD, connects to it and syncs the metadata cache."
+    (interactive)
+    (emms-player-mpd-connect)
+    (emms-cache-set-from-mpd-all)
+    (message "MPD Started!")))
+#+END_SRC

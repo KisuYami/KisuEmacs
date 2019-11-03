@@ -1,0 +1,32 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{c\PYGZhy{}default\PYGZhy{}style} \PYG{l+s}{\PYGZdq{}bsd\PYGZdq{}}
+	  \PYG{n+nv}{c\PYGZhy{}basic\PYGZhy{}offset} \PYG{l+m+mi}{4}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nv}{setq\PYGZhy{}default} \PYG{n+nv}{c\PYGZhy{}basic\PYGZhy{}offset} \PYG{l+m+mi}{4}\PYG{p}{)}
+
+\PYG{c+c1}{;; Only show compiler buffer when we got a error}
+\PYG{p}{(}\PYG{n+nb}{defun} \PYG{n+nv}{brian\PYGZhy{}compile\PYGZhy{}finish} \PYG{p}{(}\PYG{n+nv}{buffer} \PYG{n+nv}{outstr}\PYG{p}{)}
+  \PYG{p}{(}\PYG{n+nb}{unless} \PYG{p}{(}\PYG{n+nv}{string\PYGZhy{}match} \PYG{l+s}{\PYGZdq{}finished\PYGZdq{}} \PYG{n+nv}{outstr}\PYG{p}{)}
+	\PYG{p}{(}\PYG{n+nv}{switch\PYGZhy{}to\PYGZhy{}buffer\PYGZhy{}other\PYGZhy{}window} \PYG{n+nv}{buffer}\PYG{p}{))}
+  \PYG{n+no}{t}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{compilation\PYGZhy{}finish\PYGZhy{}functions} \PYG{l+s+ss}{\PYGZsq{}brian\PYGZhy{}compile\PYGZhy{}finish}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nb}{require} \PYG{l+s+ss}{\PYGZsq{}cl}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nv}{defadvice} \PYG{n+nv}{compilation\PYGZhy{}start}
+	\PYG{p}{(}\PYG{n+nv}{around} \PYG{n+nv}{inhibit\PYGZhy{}display}
+			\PYG{p}{(}\PYG{n+nv}{command} \PYG{k}{\PYGZam{}optional} \PYG{n+nv}{mode} \PYG{n+nv}{name\PYGZhy{}function} \PYG{n+nv}{highlight\PYGZhy{}regexp}\PYG{p}{))}
+  \PYG{p}{(}\PYG{k}{if} \PYG{p}{(}\PYG{n+nb}{not} \PYG{p}{(}\PYG{n+nv}{string\PYGZhy{}match} \PYG{l+s}{\PYGZdq{}\PYGZca{}\PYGZbs{}\PYGZbs{}(find\PYGZbs{}\PYGZbs{}|grep\PYGZbs{}\PYGZbs{})\PYGZdq{}} \PYG{n+nv}{command}\PYG{p}{))}
+	  \PYG{p}{(}\PYG{n+nv}{cl\PYGZhy{}flet} \PYG{p}{((}\PYG{n+nv}{display\PYGZhy{}buffer}\PYG{p}{)}
+				\PYG{p}{(}\PYG{n+nv}{set\PYGZhy{}window\PYGZhy{}point}\PYG{p}{)}
+				\PYG{p}{(}\PYG{n+nv}{goto\PYGZhy{}char}\PYG{p}{))}
+		\PYG{p}{(}\PYG{n+nv}{fset} \PYG{l+s+ss}{\PYGZsq{}display\PYGZhy{}buffer} \PYG{l+s+ss}{\PYGZsq{}ignore}\PYG{p}{)}
+		\PYG{p}{(}\PYG{n+nv}{fset} \PYG{l+s+ss}{\PYGZsq{}goto\PYGZhy{}char} \PYG{l+s+ss}{\PYGZsq{}ignore}\PYG{p}{)}
+		\PYG{p}{(}\PYG{n+nv}{fset} \PYG{l+s+ss}{\PYGZsq{}set\PYGZhy{}window\PYGZhy{}point} \PYG{l+s+ss}{\PYGZsq{}ignore}\PYG{p}{)}
+		\PYG{p}{(}\PYG{n+nv}{save\PYGZhy{}window\PYGZhy{}excursion}
+		  \PYG{n+nv}{ad\PYGZhy{}do\PYGZhy{}it}\PYG{p}{))}
+	\PYG{n+nv}{ad\PYGZhy{}do\PYGZhy{}it}\PYG{p}{))}
+
+\PYG{p}{(}\PYG{n+nv}{ad\PYGZhy{}activate} \PYG{l+s+ss}{\PYGZsq{}compilation\PYGZhy{}start}\PYG{p}{)}
+\end{Verbatim}

@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{require} \PYG{l+s+ss}{\PYGZsq{}custom\PYGZhy{}binds}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nb}{require} \PYG{l+s+ss}{\PYGZsq{}evil\PYGZhy{}numbers}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nb}{require} \PYG{l+s+ss}{\PYGZsq{}general}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nv}{defconst} \PYG{n+nv}{rcs/key\PYGZhy{}leader} \PYG{l+s}{\PYGZdq{}SPC\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c+c1}{;; Unbind Everything}
+\PYG{p}{(}\PYG{n+nb}{dolist} \PYG{p}{(}\PYG{n+nv}{key} \PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}a\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}b\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}c\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}d\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}e\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}f\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}g\PYGZdq{}}
+			   \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}h\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}k\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}l\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}n\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}o\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}p\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}q\PYGZdq{}}
+			   \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}t\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}u\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}v\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}x\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}C\PYGZhy{}z\PYGZdq{}} \PYG{l+s}{\PYGZdq{}\PYGZbs{}e\PYGZdq{}}\PYG{p}{))}
+  \PYG{p}{(}\PYG{n+nv}{global\PYGZhy{}unset\PYGZhy{}key} \PYG{n+nv}{key}\PYG{p}{))}
+
+\PYG{p}{(}\PYG{n+nv}{global\PYGZhy{}set\PYGZhy{}key} \PYG{p}{(}\PYG{n+nv}{kbd} \PYG{l+s}{\PYGZdq{}M\PYGZhy{}x\PYGZdq{}}\PYG{p}{)} \PYG{l+s+ss}{\PYGZsq{}smex}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{global\PYGZhy{}set\PYGZhy{}key} \PYG{p}{(}\PYG{n+nv}{kbd} \PYG{l+s}{\PYGZdq{}M\PYGZhy{}=\PYGZdq{}}\PYG{p}{)} \PYG{l+s+ss}{\PYGZsq{}text\PYGZhy{}scale\PYGZhy{}increase}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{global\PYGZhy{}set\PYGZhy{}key} \PYG{p}{(}\PYG{n+nv}{kbd} \PYG{l+s}{\PYGZdq{}M\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{)} \PYG{l+s+ss}{\PYGZsq{}text\PYGZhy{}scale\PYGZhy{}decrease}\PYG{p}{)}
+\end{Verbatim}

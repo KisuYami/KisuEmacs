@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{k}{progn}
+  \PYG{p}{(}\PYG{n+nb}{require} \PYG{l+s+ss}{\PYGZsq{}dired}\PYG{p}{)}
+  \PYG{p}{(}\PYG{n+nv}{general\PYGZhy{}def} \PYG{n+nv}{dired\PYGZhy{}mode\PYGZhy{}map} \PYG{l+s}{\PYGZdq{}C\PYGZhy{}f e\PYGZdq{}}\PYG{p}{))}
+\end{Verbatim}

@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{ido\PYGZhy{}enable\PYGZhy{}flex\PYGZhy{}matching} \PYG{n+no}{nil}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{ido\PYGZhy{}create\PYGZhy{}new\PYGZhy{}buffer} \PYG{l+s+ss}{\PYGZsq{}always}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{ido\PYGZhy{}everywhere} \PYG{n+no}{t}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{ido\PYGZhy{}mode} \PYG{l+m+mi}{1}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nb}{use\PYGZhy{}package} \PYG{n+nv}{ido\PYGZhy{}vertical\PYGZhy{}mode}
+  \PYG{l+s+ss}{:ensure} \PYG{n+no}{t}
+  \PYG{l+s+ss}{:init}
+  \PYG{p}{(}\PYG{n+nv}{ido\PYGZhy{}vertical\PYGZhy{}mode} \PYG{l+m+mi}{1}\PYG{p}{))}
+
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{ido\PYGZhy{}vertical\PYGZhy{}define\PYGZhy{}keys} \PYG{l+s+ss}{\PYGZsq{}C\PYGZhy{}n\PYGZhy{}and\PYGZhy{}C\PYGZhy{}p\PYGZhy{}only}\PYG{p}{)}
+\end{Verbatim}

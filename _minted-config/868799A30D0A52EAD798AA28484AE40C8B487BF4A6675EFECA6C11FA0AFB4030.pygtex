@@ -1,0 +1,26 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{use\PYGZhy{}package} \PYG{n+nv}{evil}
+  \PYG{l+s+ss}{:ensure} \PYG{n+no}{t}
+  \PYG{l+s+ss}{:init} \PYG{p}{(}\PYG{n+nv}{evil\PYGZhy{}mode} \PYG{l+m+mi}{1}\PYG{p}{))}
+
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{evil\PYGZhy{}emacs\PYGZhy{}state\PYGZhy{}modes} \PYG{n+no}{nil}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{evil\PYGZhy{}insert\PYGZhy{}state\PYGZhy{}modes} \PYG{n+no}{nil}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{evil\PYGZhy{}motion\PYGZhy{}state\PYGZhy{}modes} \PYG{n+no}{nil}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{evil\PYGZhy{}move\PYGZhy{}cursor\PYGZhy{}back} \PYG{n+no}{nil}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nv}{eval\PYGZhy{}after\PYGZhy{}load} \PYG{l+s+ss}{\PYGZsq{}evil}
+  \PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{k}{progn}
+	 \PYG{p}{(}\PYG{n+nv}{evil\PYGZhy{}make\PYGZhy{}overriding\PYGZhy{}map} \PYG{n+nv}{elfeed\PYGZhy{}search\PYGZhy{}mode\PYGZhy{}map} \PYG{l+s+ss}{\PYGZsq{}normal}\PYG{p}{)}
+	 \PYG{p}{(}\PYG{n+nv}{evil\PYGZhy{}make\PYGZhy{}overriding\PYGZhy{}map} \PYG{n+nv}{elfeed\PYGZhy{}show\PYGZhy{}mode\PYGZhy{}map} \PYG{l+s+ss}{\PYGZsq{}normal}\PYG{p}{)}
+	 \PYG{p}{(}\PYG{n+nv}{evil\PYGZhy{}make\PYGZhy{}overriding\PYGZhy{}map} \PYG{n+nv}{helpful\PYGZhy{}mode\PYGZhy{}map} \PYG{l+s+ss}{\PYGZsq{}normal}\PYG{p}{)}
+	 \PYG{p}{(}\PYG{n+nv}{evil\PYGZhy{}make\PYGZhy{}overriding\PYGZhy{}map} \PYG{n+nv}{help\PYGZhy{}mode\PYGZhy{}map} \PYG{l+s+ss}{\PYGZsq{}normal}\PYG{p}{)}
+	 \PYG{p}{(}\PYG{n+nv}{evil\PYGZhy{}make\PYGZhy{}overriding\PYGZhy{}map} \PYG{n+nv}{notmuch\PYGZhy{}show\PYGZhy{}mode\PYGZhy{}map} \PYG{l+s+ss}{\PYGZsq{}normal}\PYG{p}{)}
+	 \PYG{p}{(}\PYG{n+nv}{evil\PYGZhy{}make\PYGZhy{}overriding\PYGZhy{}map} \PYG{n+nv}{calendar\PYGZhy{}mode\PYGZhy{}map} \PYG{l+s+ss}{\PYGZsq{}normal}\PYG{p}{)}
+
+	 \PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}calendar\PYGZhy{}mode\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}evil\PYGZhy{}normalize\PYGZhy{}keymaps}\PYG{p}{)}
+	 \PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}notmuch\PYGZhy{}show\PYGZhy{}mode\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}evil\PYGZhy{}normalize\PYGZhy{}keymaps}\PYG{p}{)}
+	 \PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}help\PYGZhy{}mode\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}evil\PYGZhy{}normalize\PYGZhy{}keymaps}\PYG{p}{)}
+	 \PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}helpful\PYGZhy{}mode\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}evil\PYGZhy{}normalize\PYGZhy{}keymaps}\PYG{p}{)}
+	 \PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}elfeed\PYGZhy{}show\PYGZhy{}mode\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}evil\PYGZhy{}normalize\PYGZhy{}keymaps}\PYG{p}{)}
+	 \PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}elfeed\PYGZhy{}entry\PYGZhy{}mode\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}evil\PYGZhy{}normalize\PYGZhy{}keymaps}\PYG{p}{)))}
+\end{Verbatim}

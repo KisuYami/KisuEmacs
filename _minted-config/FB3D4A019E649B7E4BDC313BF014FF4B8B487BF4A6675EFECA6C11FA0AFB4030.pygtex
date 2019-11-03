@@ -1,0 +1,30 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nv}{general\PYGZhy{}define\PYGZhy{}key}
+ \PYG{l+s+ss}{:states} \PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{n+nv}{normal}\PYG{p}{)}
+ \PYG{l+s+ss}{:keymaps} \PYG{l+s+ss}{\PYGZsq{}org\PYGZhy{}mode\PYGZhy{}map}
+ \PYG{l+s+ss}{:prefix} \PYG{n+nv}{rcs/key\PYGZhy{}leader}
+ \PYG{l+s+ss}{:non\PYGZhy{}normal\PYGZhy{}prefix} \PYG{l+s}{\PYGZdq{}C\PYGZhy{}SPC\PYGZdq{}}
+ \PYG{l+s}{\PYGZdq{}e\PYGZdq{}}  \PYG{l+s+ss}{\PYGZsq{}eval\PYGZhy{}last\PYGZhy{}sexp}
+
+ \PYG{l+s}{\PYGZdq{}oa\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}org\PYGZhy{}agenda}
+ \PYG{l+s}{\PYGZdq{}oe\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}org\PYGZhy{}export\PYGZhy{}dispatch}
+ \PYG{l+s}{\PYGZdq{}op\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}org\PYGZhy{}latex\PYGZhy{}export\PYGZhy{}to\PYGZhy{}pdf}
+ \PYG{l+s}{\PYGZdq{}o[\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}org\PYGZhy{}agenda\PYGZhy{}file\PYGZhy{}to\PYGZhy{}front}
+ \PYG{l+s}{\PYGZdq{}o]\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}org\PYGZhy{}remove\PYGZhy{}file}
+ \PYG{l+s}{\PYGZdq{}o.\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}org\PYGZhy{}agenda\PYGZhy{}time\PYGZhy{}stamp}
+ \PYG{l+s}{\PYGZdq{}oc.\PYGZdq{}}\PYG{l+s+ss}{\PYGZsq{}org\PYGZhy{}time\PYGZhy{}stamp}
+ \PYG{l+s}{\PYGZdq{}od\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}org\PYGZhy{}deadline}
+ \PYG{l+s}{\PYGZdq{}os\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}org\PYGZhy{}schedule}
+ \PYG{l+s}{\PYGZdq{}\PYGZsq{}\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}org\PYGZhy{}edit\PYGZhy{}special}
+ \PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nv}{general\PYGZhy{}define\PYGZhy{}key}
+ \PYG{l+s+ss}{:states} \PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{n+nv}{normal}\PYG{p}{)}
+ \PYG{l+s+ss}{:keymaps} \PYG{l+s+ss}{\PYGZsq{}emacs\PYGZhy{}lisp\PYGZhy{}mode\PYGZhy{}map}
+ \PYG{l+s+ss}{:prefix} \PYG{n+nv}{rcs/key\PYGZhy{}leader}
+ \PYG{l+s+ss}{:non\PYGZhy{}normal\PYGZhy{}prefix} \PYG{l+s}{\PYGZdq{}C\PYGZhy{}SPC\PYGZdq{}}
+
+ \PYG{l+s}{\PYGZdq{}e\PYGZdq{}}  \PYG{l+s+ss}{\PYGZsq{}eval\PYGZhy{}last\PYGZhy{}sexp}
+ \PYG{l+s}{\PYGZdq{}\PYGZsq{}\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}org\PYGZhy{}edit\PYGZhy{}src\PYGZhy{}exit}
+ \PYG{p}{)}
+\end{Verbatim}

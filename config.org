@@ -1,105 +1,22 @@
 #+title: KisuEmacs
 [[./img/kisuemacs.png]]
 
-* Install
-Just run:
-#+begin_example
-git https://github.com/KisuYami/KisuEmacs.git ~/.emacs.d/
-#+end_example
-** Dependencies
-You may need:
-- notmuch
-- mbsync
-* Visual
-** Theme
-A confy theme
-#+BEGIN_SRC emacs-lisp
-  (use-package doom-themes
-    :ensure t
-    :config
-    (load-theme 'doom-one t)
-    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-          doom-themes-enable-italic t) ; if nil, italics is universally disabled
-    (doom-themes-org-config))
-
-  (use-package doom-modeline
-    :ensure t
-    :init
-    :hook (after-init . doom-modeline-mode))
-
-  (use-package diminish
-    :ensure t
-    :init
-    (diminish 'which-key-mode)
-    (diminish 'undo-tree-mode)
-    (diminish 'subword-mode)
-    (diminish 'which-key-mode)
-    (diminish 'rainbow-mode))
-#+END_SRC
-** Overall
-Remove everything that reminds me of a GUI
-#+BEGIN_SRC emacs-lisp
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1)
-
-  ;; Scroll before cursor hits the end
-  (setq scroll-margin 3
-        scroll-conservatively 9999
-        scroll-step 1)
-
-  ;; Show line numbers
-  (global-display-line-numbers-mode 1)
-  (setq display-line-numbers-type 'relative)
-  (display-line-numbers-update-width)
-
-  ;; Highlight cursor
-  (global-hl-line-mode 1)
-
-  ;; Set font
-  (add-to-list 'default-frame-alist '(font . "Hack-13" ))
-#+END_SRC
-** Startup
-Dash as startup page
-#+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :ensure t
-    :config
-    (projectile-mode +1))
-
-  (use-package page-break-lines
-    :ensure t)
-
-  (use-package dashboard
-    :ensure t
-    :config
-    (dashboard-setup-startup-hook)
-    (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
-    (setq dashboard-banner-logo-title "Welcome to the dark side")
-    (setq dashboard-center-content t)
-    (setq dashboard-show-shortcuts nil)
-    (setq dashboard-items '((recents  . 5)
-                            (projects . 5)
-                            (agenda . 5))))
-#+END_SRC
-** Modeline
-#+BEGIN_SRC emacs-lisp
-  (use-package diminish
-    :ensure t
-    :init
-    (diminish 'which-key-mode)
-    (diminish 'undo-tree-mode)
-    (diminish 'subword-mode)
-    (diminish 'which-key-mode)
-    (diminish 'projectile-mode)
-    (diminish 'rainbow-mode))
-#+END_SRC
-* General
-** General
+* Geral
 #+BEGIN_SRC emacs-lisp
   (setq-default indent-tabs-mode t)
   (setq tab-width 4) ; or any other preferred value
   (defvaralias 'c-basic-offset 'tab-width)
+
+  (defvar my-shell "/usr/bin/rshell")
+  (defadvice ansi-term (before force-bash)
+    (interactive (list my-shell)))
+  (ad-activate 'ansi-term)
+
+  (global-set-key (kbd "<s-return>") 'ansi-term)
+
+  (defvaralias 'c-basic-offset 'tab-width)
+  (setq-default indent-tabs-mode t)
+  (setq tab-width 4) ; or any other preferred value
 
   ;; Local LISP
   (add-to-list 'load-path "~/.emacs.d/lisp/")
@@ -110,16 +27,16 @@ Dash as startup page
   ;; Ring
   (setq ring-bell-function 'ignore)
 
-  (defvar my-shell "/bin/bash")
-  (defadvice ansi-term (before force-bash)
-    (interactive (list my-shell)))
-  (ad-activate 'ansi-term)
-
   ;; Disable backup
   (setq backup-inhibited t)
-
-  ;; Disable auto save
   (setq auto-save-default nil)
+
+  ;; UTF-8
+  (setq locale-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (set-selection-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8)
 #+END_SRC
 ** Modes
 *** Org
@@ -138,15 +55,68 @@ Dash as startup page
   (setq org-todo-keywords
         '((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
 
-                                          ;(use-package org-bullets
-                                          ;:ensure t
-                                          ;:config
-                                          ;(add-hook 'org-mode-hook(lambda () (org-bullets-mode))))
-#+END_SRC
-*** Org Export
-#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook(lambda () (org-bullets-mode))))
+
+  ;; Org export
   (use-package ox-twbs
     :ensure t)
+
+  (use-package ox-reveal
+    :ensure t
+    :config
+    (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
+    (setq org-reveal-mathjax t))
+
+  (use-package htmlize
+    :ensure t)
+  (require 'org)
+  (require 'ox-latex)
+  (add-to-list 'org-latex-packages-alist '("" "minted"))
+  (setq org-latex-listings 'minted)
+
+  (setq org-latex-pdf-process
+        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+  (setq org-src-fontify-natively t)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((R . t)
+     (latex . t)))
+
+  (setq view-diary-entries-initially t
+        mark-diary-entries-in-calendar t
+        number-of-diary-entries 7)
+  (add-hook 'diary-display-hook 'fancy-diary-display)
+  (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
+
+  (add-hook 'fancy-diary-display-mode-hook
+            '(lambda ()
+               (alt-clean-equal-signs)))
+
+  (defun alt-clean-equal-signs ()
+    "This function makes lines of = signs invisible."
+    (goto-char (point-min))
+    (let ((state buffer-read-only))
+      (when state (setq buffer-read-only nil))
+      (while (not (eobp))
+        (search-forward-regexp "^=+$" nil 'move)
+        (add-text-properties (match-beginning 0)
+                             (match-end 0)
+                             '(invisible t)))
+      (when state (setq buffer-read-only t))))
+
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '(
+                                 (shell . t)
+                                 (C . t)
+                                 )
+                               )
 #+END_SRC
 *** C
 #+BEGIN_SRC emacs-lisp
@@ -154,8 +124,8 @@ Dash as startup page
         c-basic-offset 4)
 
   (setq-default c-basic-offset 4)
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
+
+  ;; Only show compiler buffer when we got a error
   (defun brian-compile-finish (buffer outstr)
     (unless (string-match "finished" outstr)
       (switch-to-buffer-other-window buffer))
@@ -181,9 +151,115 @@ Dash as startup page
 
   (ad-activate 'compilation-start)
 #+END_SRC
-
+* Visual
 Themes, modeline, syntax hightlight and more
+** Theme
+A confy theme
+#+BEGIN_SRC emacs-lisp
+  (use-package doom-themes
+    :ensure t
+    :config
+    (load-theme 'doom-one t)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    (doom-themes-org-config))
 
+  ;;(set-frame-parameter (selected-frame) 'alpha '(80 80))
+  ;;(add-to-list 'default-frame-alist '(alpha 80 80))
+#+END_SRC
+** Overall
+Remove everything that reminds me of a GUI
+#+BEGIN_SRC emacs-lisp
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+
+  ;; Scroll before cursor hits the end
+  (setq scroll-margin 3
+        scroll-conservatively 9999
+        scroll-step 1)
+
+  ;; Show line numbers
+  (progn
+    (require 'display-line-numbers)
+    (global-display-line-numbers-mode 1)
+    (display-line-numbers-update-width)
+    (setq display-line-numbers-type 'relative))
+
+  ;; Highlight cursor
+  (global-hl-line-mode 1)
+
+  ;; Set font
+  (add-to-list 'default-frame-alist '(font . "Hack-11" ))
+  ;; Maximized window
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+END_SRC
+** Startup
+Dash as startup page
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t
+    :config
+    (projectile-mode +1))
+
+  (use-package page-break-lines
+    :ensure t)
+
+  (use-package dashboard
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
+    (setq dashboard-banner-logo-title "Welcome to the dark side")
+    (setq dashboard-center-content t)
+    (setq dashboard-show-shortcuts nil)
+    (setq dashboard-items '((agenda . 5)
+                            (recents  . 5)
+                            (projects . 15))))
+#+END_SRC
+** Modeline
+#+BEGIN_SRC emacs-lisp
+  (use-package doom-modeline
+    :ensure t
+    :init
+    :hook (after-init . doom-modeline-mode))
+
+                                          ;(use-package spaceline
+                                          ;:ensure t
+                                          ;:config
+                                          ;(require 'spaceline-config)
+                                          ;(setq spaceline-buffer-encoding-abbrev-p nil)
+                                          ;(setq spaceline-line-column-p nil)
+                                          ;(setq spaceline-line-p nil)
+                                          ;(setq powerline-default-separator (quote arrow))
+                                          ;(spaceline-spacemacs-theme))
+
+  (use-package diminish
+    :ensure t
+    :init
+    (diminish 'hungry-delete-mode)
+    (diminish 'workgroups-mode)
+    (diminish 'which-key-mode)
+    (diminish 'undo-tree-mode)
+    (diminish 'which-key-mode)
+    (diminish 'yas-minor-mode)
+    (diminish 'undo-tree-mode)
+    (diminish 'subword-mode)
+    (diminish 'company-mode)
+    (diminish 'org-indent-mode)
+    (diminish 'rainbow-mode))
+#+END_SRC
+** Highlight
+#+BEGIN_SRC emacs-lisp
+  (use-package whitespace
+    :ensure t
+    :config
+    (setq whitespace-line-column 80) ;; limit line length
+    (setq whitespace-style '(face lines-tail))
+
+    (add-hook 'prog-mode-hook 'whitespace-mode)
+    (whitespace-mode 1))
+#+END_SRC
 * Window
 ** I-DO
 #+BEGIN_SRC emacs-lisp
@@ -259,6 +335,15 @@ Themes, modeline, syntax hightlight and more
   (global-subword-mode 1)
 #+END_SRC
 * Package
+** Magit
+#+BEGIN_SRC emacs-lisp
+  ;;anoying window-p nil
+  (use-package magit
+    :ensure t)
+
+  (use-package evil-magit
+    :ensure t)
+#+END_SRC
 ** Overall
 #+BEGIN_SRC emacs-lisp
   (use-package hungry-delete
@@ -293,13 +378,6 @@ Themes, modeline, syntax hightlight and more
     :config
     (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org")))
 
-  (eval-after-load 'evil
-    '(progn
-       (evil-make-overriding-map elfeed-search-mode-map 'normal)
-       (evil-make-overriding-map elfeed-show-mode-map 'normal)
-       (add-hook 'elfeed-show-mode-hook 'evil-normalize-keymaps)
-       (add-hook 'elfeed-entry-mode-hook 'evil-normalize-keymaps)))
-
   (use-package helpful
     :ensure t)
 
@@ -323,6 +401,10 @@ Themes, modeline, syntax hightlight and more
   (add-hook 'c-mode #'c/lisp-pair-mode)
   (electric-pair-mode t)
 
+  (use-package popup-kill-ring
+    :ensure t
+    :bind ("M-p" . popup-kill-ring))
+
   (use-package which-key
     :ensure t
     :init
@@ -331,6 +413,86 @@ Themes, modeline, syntax hightlight and more
   (use-package elcord
     :ensure t)
 #+END_SRC
+** Auto Completion
+Keep good company
+*** Completion
+#+BEGIN_SRC emacs-lisp
+  ;; Autocompletion frontend
+  (use-package company
+    :ensure t
+    :config
+    (add-hook 'after-init-hook 'global-company-mode)
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-lenght 3)
+    :preface
+    ;; enable yasnippet everywhere
+    (defvar company-mode/enable-yas t
+      "Enable yasnippet for all backends.")
+    (defun company-mode/backend-with-yas (backend)
+      (if (or
+           (not company-mode/enable-yas)
+           (and (listp backend) (member 'company-yasnippet backend)))
+          backend
+        (append (if (consp backend) backend (list backend))
+                '(:with company-yasnippet)))))
+
+  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "M-n") 'nil)
+    (define-key company-active-map (kbd "M-p") 'nil)
+    (define-key company-active-map (kbd "C-n") 'company-select-next)
+    (define-key company-active-map (kbd "C-p") 'company-select-previous)
+    (add-hook 'c++-mode-hook 'company-mode)
+    (add-hook 'c-mode-hook 'company-mode))
+
+  ;; Backend for C/C++ autocompletion
+  (use-package irony
+    :ensure t
+    :config
+    (add-hook 'c++-mode-hook 'irony-mode)
+    (add-hook 'c-mode-hook 'irony-mode)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+  ;; Integration for company and irony
+  (use-package company-irony
+    :ensure t
+    :config
+    (require 'company)
+    (add-to-list 'company-backends 'company-irony)
+    (add-to-list 'company-backends 'company-c-headers))
+#+END_SRC
+*** Snippets
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :ensure t
+    :init (yas-global-mode t)
+    :config
+    (use-package yasnippet-snippets
+      :ensure t)
+    (yas-reload-all))
+#+END_SRC
+*** Linter
+#+BEGIN_SRC emacs-lisp
+  ;;(use-package flycheck
+  ;;:ensure t
+  ;;:init (global-flycheck-mode t)
+  ;;:config
+  ;;(setq flycheck-clang-language-standard "gnu99"))
+
+  ;;(use-package flycheck-irony
+  ;;:ensure t
+  ;;:config
+  ;;(eval-after-load 'flycheck
+  ;;'(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
+#+END_SRC
+*** Info
+#+BEGIN_SRC emacs-lisp
+  (use-package eldoc
+    :ensure t
+    :diminish eldoc-mode
+    :init (add-hook 'company-mode-hook 'eldoc-mode))
+#+END_SRC
+* Keybinds
+Lazyness
 ** Evil
 I'm evil, yes i am
 #+BEGIN_SRC emacs-lisp
@@ -343,81 +505,37 @@ I'm evil, yes i am
   (setq evil-motion-state-modes nil)
   (setq evil-move-cursor-back nil)
 
-  (define-key evil-normal-state-map (kbd "C-k") (lambda ()
-                                                  (interactive)
-                                                  (evil-scroll-up nil)))
+  (eval-after-load 'emms
+    '(evil-set-initial-state 'emms-mode 'insert))
 
-  (define-key evil-normal-state-map (kbd "C-j") (lambda ()
-                                                  (interactive)
-                                                  (evil-scroll-down nil)))
+
+  (eval-after-load 'evil
+    '(progn
+       (evil-make-overriding-map elfeed-search-mode-map 'normal)
+       (evil-make-overriding-map elfeed-show-mode-map 'normal)
+       (evil-make-overriding-map helpful-mode-map 'normal)
+       (evil-make-overriding-map help-mode-map 'normal)
+       (evil-make-overriding-map notmuch-show-mode-map 'normal)
+       (evil-make-overriding-map calendar-mode-map 'normal)
+
+       (add-hook 'calendar-mode-hook 'evil-normalize-keymaps)
+       (add-hook 'notmuch-show-mode-hook 'evil-normalize-keymaps)
+       (add-hook 'help-mode-hook 'evil-normalize-keymaps)
+       (add-hook 'helpful-mode-hook 'evil-normalize-keymaps)
+       (add-hook 'elfeed-show-mode-hook 'evil-normalize-keymaps)
+       (add-hook 'elfeed-entry-mode-hook 'evil-normalize-keymaps)))
+
+  (eval-after-load 'magit
+    '(evil-set-initial-state 'magit-popup-mode 'emacs))
+
 #+END_SRC
-** Magit
+** Setup
 #+BEGIN_SRC emacs-lisp
-  ;;anoying window-p nil
-  ;;(use-package magit
-  ;;:ensure t)
-
-  ;;(eval-after-load 'magit
-  ;;'(evil-set-initial-state 'magit-popup-mode 'emacs))
-
-  ;;(use-package evil-magit
-  ;;:ensure t)
-#+END_SRC
-* Auto Completion
-Keep good company
-#+BEGIN_SRC emacs-lisp
-  (use-package company
-    :ensure t
-    :config
-    (add-hook 'after-init-hook 'global-company-mode)
-    (setq company-idle-delay 0)
-    (setq company-minimum-prefix-lenght 3))
-
-  (with-eval-after-load 'company
-    (define-key company-active-map (kbd "M-n") 'nil)
-    (define-key company-active-map (kbd "M-p") 'nil)
-    (define-key company-active-map (kbd "C-n") 'company-select-next)
-    (define-key company-active-map (kbd "C-p") 'company-select-previous))
-
-  (use-package company-irony
-    :ensure t
-    :config
-    (require 'company)
-    (add-to-list 'company-backends 'company-irony))
-
-  (use-package irony
-    :ensure t
-    :config
-    (add-hook 'c++-mode-hook 'irony-mode)
-    (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-
-
-  (with-eval-after-load 'company
-    (add-hook 'c++-mode-hook 'company-mode)
-    (add-hook 'c-mode-hook 'company-mode))
-
-  (use-package yasnippet
-    :ensure t
-    :config
-    (use-package yasnippet-snippets
-      :ensure t)
-    (yas-reload-all))
-
-  (require 'yasnippet)
-  (yas-global-mode 1)
-
-  (use-package eldoc
-    :ensure t
-    :diminish eldoc-mode
-    :init (add-hook 'ycmd-mode-hook 'ycmd-eldoc-setup))
-#+END_SRC
-* Keybinds
-Lazyness
-#+BEGIN_SRC emacs-lisp
-  ;; TODO: use use-package
   (require 'custom-binds)
+  (require 'evil-numbers)
   (require 'general)
+
+  (defconst rcs/key-leader "SPC")
 
   ;; Unbind Everything
   (dolist (key '("\C-a" "\C-b" "\C-c" "\C-d" "\C-e" "\C-f" "\C-g"
@@ -425,29 +543,90 @@ Lazyness
                  "\C-t" "\C-u" "\C-v" "\C-x" "\C-z" "\e"))
     (global-unset-key key))
 
-  (global-set-key (kbd "s-d") 'dmenu)
   (global-set-key (kbd "M-x") 'smex)
   (global-set-key (kbd "M-=") 'text-scale-increase)
   (global-set-key (kbd "M--") 'text-scale-decrease)
-
+#+END_SRC
+** Keymaps
+*** Dashboard
+#+BEGIN_SRC emacs-lisp
   (general-define-key
    :states '(normal emacs)
-   :prefix "SPC"
+   :keymaps 'dashboard-mode-map
+   :prefix rcs/key-leader
    :non-normal-prefix "C-SPC"
 
-   ;; simple command
-   "RET" 'eshell
-   "xx" 'smex
+   ;; Feeds
+   "mm" 'notmuch
+   "md" 'notmuch-delete-tagged
+   "mn" 'elfeed-open
+
+   ;; Agenda
+   "aa" 'org-agenda
+   "am" 'calendar
+   "ad" 'diary
+
+   ;; EMMS
+   "mm" 'emms
+   "mb" 'emms-smart-browse
+   "mr" 'emms-player-mpd-update-all-reset-cache
+
+   "ms" 'emms-setup-mpd
+   "mS" 'emms-stop
+
+   "mp" 'emms-previous
+   "mn" 'emms-next
+   "mP" 'emms-pause
+   )
+#+END_SRC
+*** Org/Lisp
+#+BEGIN_SRC emacs-lisp
+  (general-define-key
+   :states '(normal)
+   :keymaps 'org-mode-map
+   :prefix rcs/key-leader
+   :non-normal-prefix "C-SPC"
+   "e"  'eval-last-sexp
+
+   "E" 'org-babel-execute-src-block
+   "oa" 'org-agenda
+   "oe" 'org-export-dispatch
+   "op" 'org-latex-export-to-pdf
+   "o[" 'org-agenda-file-to-front
+   "o]" 'org-remove-file
+   "o." 'org-agenda-time-stamp
+   "oc."'org-time-stamp
+   "od" 'org-deadline
+   "os" 'org-schedule
+   "'" 'org-edit-special
+   )
+
+  (general-define-key
+   :states '(normal)
+   :keymaps 'emacs-lisp-mode-map
+   :prefix rcs/key-leader
+   :non-normal-prefix "C-SPC"
+
+   "e"  'eval-last-sexp
+   "'" 'org-edit-src-exit
+   )
+#+END_SRC
+*** Normal
+#+BEGIN_SRC emacs-lisp
+  (general-define-key
+   :states '(normal emacs)
+   :prefix rcs/key-leader
+   :non-normal-prefix "C-SPC"
 
    ;; Config
-   "cr" 'config-reload
-   "ce" 'config-visit
+   "cr" '(lambda () (interactive) (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
+   "ce" '(lambda () (interactive) (find-file "~/.emacs.d/config.org"))
    "cf" 'indent-buffer
 
    ;; Files
+   "su" 'sudo-edit
    "f"  'ido-find-file
    "F"  'dired
-   "se" 'sudo-edit
 
    ;; Buffers
    "k"  'kill-current-buffer
@@ -464,37 +643,41 @@ Lazyness
    "wk" 'delete-window
    "wd" 'delete-other-windows
 
-   ;; Programming
-   "'"  'org-edit-special
-   "\"" 'org-edit-src-exit
-   "e" 'eval-last-sexp
-   "\\" 'swiper
-
-   "cp" 'org-latex-export-to-pdf
-
-   "cc" 'projectile-compile-project
-   ;"gg" 'magit-status
-
-   ;; Org
-   "oa" 'org-agenda
-   "o[" 'org-agenda-file-to-front
-   "o]" 'org-remove-file
-   "o." 'org-agenda-time-stamp
-   "oc." 'org-time-stamp
-   "od" 'org-deadline
-   "os" 'org-schedule
-
-   ;; RSS & Mail
-   "mm" 'notmuch
-   "md" 'notmuch-delete-tagged
-   "mn" 'elfeed-open
-
    ;; Help
    "hk" 'helpful-key
    "hf" 'helpful-function
    "hx" 'describe-mode
-
-
+   "ht" 'help-with-tutorial
+   "hi" 'info
    "hy" 'yas-describe-tables
+
+   ;; Magit
+   "gg" 'magit
    )
+
+  (general-define-key
+   :states '(normal emacs)
+   "C-k" 'evil-numbers/inc-at-pt
+   "C-j" 'evil-numbers/dec-at-pt
+   )
+#+END_SRC
+
+*** C/C++
+#+BEGIN_SRC emacs-lisp
+
+  (general-def
+    :states '(normal)
+    :keymaps 'c-mode-map
+    :prefix rcs/key-leader
+    :non-normal-prefix "C-SPC"
+    "cc" 'projectile-compile-project
+    "ct" 'create-tags
+    )
+
+#+END_SRC
+*** Dired
+#+BEGIN_SRC emacs-lisp
+  (progn
+    (require 'dired)
+    (general-def dired-mode-map "C-f e"))
 #+END_SRC

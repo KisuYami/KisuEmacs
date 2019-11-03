@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nv}{general\PYGZhy{}def}
+  \PYG{l+s+ss}{:states} \PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{n+nv}{normal}\PYG{p}{)}
+  \PYG{l+s+ss}{:keymaps} \PYG{l+s+ss}{\PYGZsq{}c\PYGZhy{}mode\PYGZhy{}map}
+  \PYG{l+s+ss}{:prefix} \PYG{n+nv}{rcs/key\PYGZhy{}leader}
+  \PYG{l+s+ss}{:non\PYGZhy{}normal\PYGZhy{}prefix} \PYG{l+s}{\PYGZdq{}C\PYGZhy{}SPC\PYGZdq{}}
+  \PYG{l+s}{\PYGZdq{}cc\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}projectile\PYGZhy{}compile\PYGZhy{}project}
+  \PYG{l+s}{\PYGZdq{}ct\PYGZdq{}} \PYG{l+s+ss}{\PYGZsq{}create\PYGZhy{}tags}
+  \PYG{p}{)}
+\end{Verbatim}

@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{view\PYGZhy{}diary\PYGZhy{}entries\PYGZhy{}initially} \PYG{n+no}{t}
+	  \PYG{n+nv}{mark\PYGZhy{}diary\PYGZhy{}entries\PYGZhy{}in\PYGZhy{}calendar} \PYG{n+no}{t}
+	  \PYG{n+nv}{number\PYGZhy{}of\PYGZhy{}diary\PYGZhy{}entries} \PYG{l+m+mi}{7}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}diary\PYGZhy{}display\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}fancy\PYGZhy{}diary\PYGZhy{}display}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}today\PYGZhy{}visible\PYGZhy{}calendar\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}calendar\PYGZhy{}mark\PYGZhy{}today}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook} \PYG{l+s+ss}{\PYGZsq{}fancy\PYGZhy{}diary\PYGZhy{}display\PYGZhy{}mode\PYGZhy{}hook}
+		  \PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{k}{lambda} \PYG{p}{()}
+			 \PYG{p}{(}\PYG{n+nv}{alt\PYGZhy{}clean\PYGZhy{}equal\PYGZhy{}signs}\PYG{p}{)))}
+
+\PYG{p}{(}\PYG{n+nb}{defun} \PYG{n+nv}{alt\PYGZhy{}clean\PYGZhy{}equal\PYGZhy{}signs} \PYG{p}{()}
+  \PYG{l+s}{\PYGZdq{}This function makes lines of = signs invisible.\PYGZdq{}}
+  \PYG{p}{(}\PYG{n+nv}{goto\PYGZhy{}char} \PYG{p}{(}\PYG{n+nv}{point\PYGZhy{}min}\PYG{p}{))}
+  \PYG{p}{(}\PYG{k}{let} \PYG{p}{((}\PYG{n+nv}{state} \PYG{n+nv}{buffer\PYGZhy{}read\PYGZhy{}only}\PYG{p}{))}
+	\PYG{p}{(}\PYG{n+nb}{when} \PYG{n+nv}{state} \PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{buffer\PYGZhy{}read\PYGZhy{}only} \PYG{n+no}{nil}\PYG{p}{))}
+	\PYG{p}{(}\PYG{n+nv}{while} \PYG{p}{(}\PYG{n+nb}{not} \PYG{p}{(}\PYG{n+nv}{eobp}\PYG{p}{))}
+	  \PYG{p}{(}\PYG{n+nv}{search\PYGZhy{}forward\PYGZhy{}regexp} \PYG{l+s}{\PYGZdq{}\PYGZca{}=+\PYGZdl{}\PYGZdq{}} \PYG{n+no}{nil} \PYG{l+s+ss}{\PYGZsq{}move}\PYG{p}{)}
+	  \PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}text\PYGZhy{}properties} \PYG{p}{(}\PYG{n+nv}{match\PYGZhy{}beginning} \PYG{l+m+mi}{0}\PYG{p}{)}
+						   \PYG{p}{(}\PYG{n+nv}{match\PYGZhy{}end} \PYG{l+m+mi}{0}\PYG{p}{)}
+						   \PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{n+nv}{invisible} \PYG{n+no}{t}\PYG{p}{)))}
+	\PYG{p}{(}\PYG{n+nb}{when} \PYG{n+nv}{state} \PYG{p}{(}\PYG{k}{setq} \PYG{n+nv}{buffer\PYGZhy{}read\PYGZhy{}only} \PYG{n+no}{t}\PYG{p}{))))}
+\end{Verbatim}
