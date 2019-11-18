@@ -82,12 +82,15 @@
           "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
           "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
+
   (setq org-src-fontify-natively t)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((R . t)
-     (latex . t)))
+     (latex . t)
+     (C . t)
+     (shell . t)))
 
   (setq view-diary-entries-initially t
         mark-diary-entries-in-calendar t
@@ -120,10 +123,13 @@
 #+END_SRC
 *** C
 #+BEGIN_SRC emacs-lisp
-  (setq c-default-style "bsd"
-        c-basic-offset 4)
-
-  (setq-default c-basic-offset 4)
+  (defvaralias 'c-basic-offset 'tab-width)
+  (defvaralias 'cperl-indent-level 'tab-width)
+  (setq c-default-style "linux")
+  (setq-default tab-always-indent t)
+  (setq-default indent-tabs-mode t)
+  (setq-default c-basic-offset 8)
+  (setq-default tab-width 8)
 
   ;; Only show compiler buffer when we got a error
   (defun brian-compile-finish (buffer outstr)
@@ -335,14 +341,86 @@ Dash as startup page
   (global-subword-mode 1)
 #+END_SRC
 * Package
-** Magit
+** Git
 #+BEGIN_SRC emacs-lisp
-  ;;anoying window-p nil
   (use-package magit
     :ensure t)
 
   (use-package evil-magit
     :ensure t)
+
+  (use-package git-gutter+
+    :ensure t
+    :init (global-git-gutter+-mode +1))
+
+
+
+  (use-package git-gutter-fringe+
+    :ensure t
+    :config
+
+    ;; Please adjust fringe width if your own sign is too big.
+
+    (setq-default fringes-outside-margins t)
+    (setq-default left-fringe-width  3)
+    (setq-default right-fringe-width 0)
+
+    (fringe-helper-define 'git-gutter-fr+-added nil
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX")
+
+    (fringe-helper-define 'git-gutter-fr+-deleted nil
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX")
+
+    (fringe-helper-define 'git-gutter-fr+-modified nil
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"
+      "XXXXXXXX"))
 #+END_SRC
 ** Overall
 #+BEGIN_SRC emacs-lisp
@@ -358,9 +436,6 @@ Dash as startup page
     :ensure t
     :config
     (global-hl-todo-mode t))
-
-  (use-package weechat
-    :ensure t)
 
   ;; Email
   (use-package notmuch
@@ -409,11 +484,8 @@ Dash as startup page
     :ensure t
     :init
     (which-key-mode))
-
-  (use-package elcord
-    :ensure t)
 #+END_SRC
-** Auto Completion
+** Programming
 Keep good company
 *** Completion
 #+BEGIN_SRC emacs-lisp
@@ -459,6 +531,19 @@ Keep good company
     (require 'company)
     (add-to-list 'company-backends 'company-irony)
     (add-to-list 'company-backends 'company-c-headers))
+
+  ;; Backend for C/C++ autocompletion
+  ;;(use-package lsp-mode :commands lsp :ensure t :hook (prog-mode . lsp))
+  ;;(use-package lsp-ui :commands lsp-ui-mode :ensure t)
+  ;;(use-package company-lsp
+  ;;:ensure t
+  ;;:commands company-lsp
+  ;;:config
+  ;;(push 'company-lsp company-backends)
+  ;;(setq company-lsp-cache-candidates 'auto)
+  ;;(setq company-lsp-async t)
+  ;;(setq company-lsp-enable-snippet t)
+  ;;(push 'company-lsp company-backends)) ;; add company-lsp as a backend
 #+END_SRC
 *** Snippets
 #+BEGIN_SRC emacs-lisp
@@ -477,12 +562,6 @@ Keep good company
   ;;:init (global-flycheck-mode t)
   ;;:config
   ;;(setq flycheck-clang-language-standard "gnu99"))
-
-  ;;(use-package flycheck-irony
-  ;;:ensure t
-  ;;:config
-  ;;(eval-after-load 'flycheck
-  ;;'(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
 #+END_SRC
 *** Info
 #+BEGIN_SRC emacs-lisp
@@ -490,6 +569,11 @@ Keep good company
     :ensure t
     :diminish eldoc-mode
     :init (add-hook 'company-mode-hook 'eldoc-mode))
+
+  ;;(use-package editorconfig
+  ;;:ensure t
+  ;;:config
+  ;;(editorconfig-mode 1))
 #+END_SRC
 * Keybinds
 Lazyness
@@ -505,8 +589,8 @@ I'm evil, yes i am
   (setq evil-motion-state-modes nil)
   (setq evil-move-cursor-back nil)
 
-  (eval-after-load 'emms
-    '(evil-set-initial-state 'emms-mode 'insert))
+  ;;(eval-after-load 'emms
+  ;;'(evil-set-initial-state 'emms-mode 'insert))
 
 
   (eval-after-load 'evil
@@ -567,16 +651,16 @@ I'm evil, yes i am
    "ad" 'diary
 
    ;; EMMS
-   "mm" 'emms
-   "mb" 'emms-smart-browse
-   "mr" 'emms-player-mpd-update-all-reset-cache
+   ;;"mm" 'emms
+   ;;"mb" 'emms-smart-browse
+   ;;"mr" 'emms-player-mpd-update-all-reset-cache
 
-   "ms" 'emms-setup-mpd
-   "mS" 'emms-stop
+   ;;"ms" 'emms-setup-mpd
+   ;;"mS" 'emms-stop
 
-   "mp" 'emms-previous
-   "mn" 'emms-next
-   "mP" 'emms-pause
+   ;;"mp" 'emms-previous
+   ;;"mn" 'emms-next
+   ;;"mP" 'emms-pause
    )
 #+END_SRC
 *** Org/Lisp

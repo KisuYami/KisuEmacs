@@ -3,7 +3,6 @@
 *** [[https://itsfoss.com/feed][It's FOSS]]
 *** [[http://feeds.feedburner.com/TheHackersNews?format=xml][The Hacker News]]
 ** Linux/Distros
-*** [[https://news.opensuse.org/feed/][Opensuse]]
 * Youtube                                                            :youtube:
 ** General    :general:
 *** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCTU7zMqyCsIcaYWwtjemYoQ][Bizonacci]]                                                   :Bizonacci:

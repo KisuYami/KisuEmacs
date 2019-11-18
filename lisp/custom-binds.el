@@ -60,10 +60,10 @@
   (save-excursion
     (delete-trailing-whitespace)
     (indent-region (point-min) (point-max) nil)
-    (untabify (point-min) (point-max))))
+    (tabify (point-min) (point-max))))
 
-(defun create-tags (dir-name)
-  "Create tags file."
-  (interactive "DDirectory: ")
-  (eshell-command
-   (format "find %s -type f -name \"*.[ch]\" | etags -" dir-name)))
+  (defun create-tags (dir-name)
+    "Create tags file."
+    (interactive "DDirectory: ")
+    (eshell-command
+     (format "find %s -type f -name \"*.[ch]\" | etags -" dir-name)))
