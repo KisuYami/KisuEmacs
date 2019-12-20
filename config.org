@@ -50,10 +50,10 @@
   (add-hook 'org-mode-hook 'org-indent-mode)
 
   (add-to-list 'org-structure-template-alist
-               '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+	       '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
 
   (setq org-todo-keywords
-        '((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
+	'((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
 
   (use-package org-bullets
     :ensure t
@@ -70,17 +70,10 @@
     (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
     (setq org-reveal-mathjax t))
 
-  (use-package htmlize
-    :ensure t)
-  (require 'org)
-  (require 'ox-latex)
-  (add-to-list 'org-latex-packages-alist '("" "minted"))
-  (setq org-latex-listings 'minted)
-
   (setq org-latex-pdf-process
-        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+	'("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+	  "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+	  "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
 
   (setq org-src-fontify-natively t)
@@ -90,17 +83,19 @@
    '((R . t)
      (latex . t)
      (C . t)
+     (ditaa . t)
      (shell . t)))
 
+  (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0.11.jar")
   (setq view-diary-entries-initially t
-        mark-diary-entries-in-calendar t
-        number-of-diary-entries 7)
+	mark-diary-entries-in-calendar t
+	number-of-diary-entries 7)
   (add-hook 'diary-display-hook 'fancy-diary-display)
   (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
 
   (add-hook 'fancy-diary-display-mode-hook
-            '(lambda ()
-               (alt-clean-equal-signs)))
+	    '(lambda ()
+	       (alt-clean-equal-signs)))
 
   (defun alt-clean-equal-signs ()
     "This function makes lines of = signs invisible."
@@ -108,18 +103,36 @@
     (let ((state buffer-read-only))
       (when state (setq buffer-read-only nil))
       (while (not (eobp))
-        (search-forward-regexp "^=+$" nil 'move)
-        (add-text-properties (match-beginning 0)
-                             (match-end 0)
-                             '(invisible t)))
+	(search-forward-regexp "^=+$" nil 'move)
+	(add-text-properties (match-beginning 0)
+			     (match-end 0)
+			     '(invisible t)))
       (when state (setq buffer-read-only t))))
 
   (org-babel-do-load-languages 'org-babel-load-languages
-                               '(
-                                 (shell . t)
-                                 (C . t)
-                                 )
-                               )
+			       '(
+				 (ditaa . t)
+				 (shell . t)
+				 (C . t)
+				 )
+			       )
+  (use-package org
+    :config
+    (progn
+      (defun imalison:org-inline-css-hook (exporter)
+	"Insert custom inline css to automatically set the
+    background of code to whatever theme I'm using's background"
+	(when (eq exporter 'html)
+	  (let* ((my-pre-bg (face-background 'default))
+		 (my-pre-fg (face-foreground 'default)))
+	    (setq
+	     org-html-head-extra
+	     (concat
+	      org-html-head-extra
+	      (format "<style type=\"text/css\">\n pre.src {background-color: %s; color: %s;}</style>\n"
+		      my-pre-bg my-pre-fg))))))
+
+      (add-hook 'org-export-before-processing-hook 'imalison:org-inline-css-hook)))
 #+END_SRC
 *** C
 #+BEGIN_SRC emacs-lisp
@@ -143,16 +156,16 @@
 
   (defadvice compilation-start
       (around inhibit-display
-              (command &optional mode name-function highlight-regexp))
+	      (command &optional mode name-function highlight-regexp))
     (if (not (string-match "^\\(find\\|grep\\)" command))
-        (cl-flet ((display-buffer)
-                  (set-window-point)
-                  (goto-char))
-          (fset 'display-buffer 'ignore)
-          (fset 'goto-char 'ignore)
-          (fset 'set-window-point 'ignore)
-          (save-window-excursion
-            ad-do-it))
+	(cl-flet ((display-buffer)
+		  (set-window-point)
+		  (goto-char))
+	  (fset 'display-buffer 'ignore)
+	  (fset 'goto-char 'ignore)
+	  (fset 'set-window-point 'ignore)
+	  (save-window-excursion
+	    ad-do-it))
       ad-do-it))
 
   (ad-activate 'compilation-start)
@@ -167,7 +180,7 @@ A confy theme
     :config
     (load-theme 'doom-one t)
     (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+	  doom-themes-enable-italic t) ; if nil, italics is universally disabled
     (doom-themes-org-config))
 
   ;;(set-frame-parameter (selected-frame) 'alpha '(80 80))
@@ -186,12 +199,17 @@ Remove everything that reminds me of a GUI
         scroll-step 1)
 
   ;; Show line numbers
-  (progn
-    (require 'display-line-numbers)
-    (global-display-line-numbers-mode 1)
-    (display-line-numbers-update-width)
-    (setq display-line-numbers-type 'relative))
+  (defun rcs/line-numbers ()
+    "Enable and define config for line numbers."
+    (interactive)
+    (progn
+      (require 'display-line-numbers)
+      (global-display-line-numbers-mode 1)
+      (display-line-numbers-update-width)
+      (setq display-line-numbers-type 'relative))
+    )
 
+  (add-hook 'emacs-startup-hook 'rcs/line-numbers)
   ;; Highlight cursor
   (global-hl-line-mode 1)
 
@@ -220,8 +238,8 @@ Dash as startup page
     (setq dashboard-center-content t)
     (setq dashboard-show-shortcuts nil)
     (setq dashboard-items '((agenda . 5)
-                            (recents  . 5)
-                            (projects . 15))))
+			    (recents  . 5)
+			    (projects . 15))))
 #+END_SRC
 ** Modeline
 #+BEGIN_SRC emacs-lisp
@@ -230,15 +248,15 @@ Dash as startup page
     :init
     :hook (after-init . doom-modeline-mode))
 
-                                          ;(use-package spaceline
-                                          ;:ensure t
-                                          ;:config
-                                          ;(require 'spaceline-config)
-                                          ;(setq spaceline-buffer-encoding-abbrev-p nil)
-                                          ;(setq spaceline-line-column-p nil)
-                                          ;(setq spaceline-line-p nil)
-                                          ;(setq powerline-default-separator (quote arrow))
-                                          ;(spaceline-spacemacs-theme))
+					  ;(use-package spaceline
+					  ;:ensure t
+					  ;:config
+					  ;(require 'spaceline-config)
+					  ;(setq spaceline-buffer-encoding-abbrev-p nil)
+					  ;(setq spaceline-line-column-p nil)
+					  ;(setq spaceline-line-p nil)
+					  ;(setq powerline-default-separator (quote arrow))
+					  ;(spaceline-spacemacs-theme))
 
   (use-package diminish
     :ensure t
@@ -284,49 +302,43 @@ Dash as startup page
 ** Ibuffer
 #+BEGIN_SRC emacs-lisp
   (setq ibuffer-saved-filter-groups
-        (quote (("default"
-                 ("dired" (mode . dired-mode))
-                 ("programming" (or
-                                 (mode . css-mode)
-                                 (mode . html-mode)
-                                 (mode . markdown-mode)
-                                 (mode . org-mode)
-                                 (mode . asm-mode)
-                                 (mode . c-mode)
-                                 (mode . prog-mode)))
-                 ("planner" (or
-                             (name . "^\\**Calendar\\**$")
-                             (name . "^diary$")
-                             (mode . muse-mode)))
-                 ("emacs" (or
-                           (name . "^\\**dashboard\\**$")
-                           (name . "^\\**scratch\\**$")
-                           (name . "^\\**Messages\\**$")
-                           (name . "^\\**elfeed-log\\**$")))
-                 ("feeds" (or
-                           (mode . message-mode)
-                           (mode . bbdb-mode)
-                           (mode . mail-mode)
-                           (mode . gnus-group-mode)
-                           (mode . gnus-summary-mode)
-                           (mode . gnus-article-mode)
-                           (mode . elfeed-search-mode)
-                           (mode . notmuch-hello-mode)
-                           (mode . notmuch-search-mode)
-                           (mode . notmuch-message-mode)
-                           (mode . notmuch-show-mode)
-                           (name . "^\\.bbdb$")
-                           (name . "^\\.newsrc-dribble")))))))
+	(quote (("default"
+		 ("dired" (mode . dired-mode))
+		 ("programming" (or
+				 (mode . css-mode)
+				 (mode . html-mode)
+				 (mode . markdown-mode)
+				 (mode . org-mode)
+				 (mode . asm-mode)
+				 (mode . c-mode)
+				 (mode . prog-mode)))
+		 ("planner" (or
+			     (name . "^\\**Calendar\\**$")
+			     (name . "^diary$")
+			     (mode . muse-mode)))
+		 ("emacs" (or
+			   (name . "^\\**dashboard\\**$")
+			   (name . "^\\**scratch\\**$")
+			   (name . "^\\**Messages\\**$")
+			   (name . "^\\**elfeed-log\\**$")))
+		 ("feeds" (or
+			   (mode . message-mode)
+			   (mode . bbdb-mode)
+			   (mode . mail-mode)
+			   (mode . gnus-group-mode)
+			   (mode . gnus-summary-mode)
+			   (mode . gnus-article-mode)
+			   (name . "^\\.bbdb$")
+			   (name . "^\\.newsrc-dribble")))))))
 
   (add-hook 'ibuffer-mode-hook
-            (lambda ()
-              (ibuffer-auto-mode 1)
-              (ibuffer-switch-to-saved-filter-groups "default")))
+	    (lambda ()
+	      (ibuffer-auto-mode 1)
+	      (ibuffer-switch-to-saved-filter-groups "default")))
 
   (setq ibuffer-expert t)
   (setq ibuffer-show-empty-filter-groups nil)
 #+END_SRC
-
 ** Swith Window
 #+BEGIN_SRC emacs-lisp
   (use-package switch-window
@@ -424,6 +436,14 @@ Dash as startup page
 #+END_SRC
 ** Overall
 #+BEGIN_SRC emacs-lisp
+  (use-package php-mode
+    :ensure t)
+
+  (use-package x86-lookup
+    :ensure t
+    :config
+    (setq x86-lookup-pdf "~/Documents/Programming/C/Reference/Intel_x86_64_Manual.pdf"))
+
   (use-package hungry-delete
     :ensure t
     :config
@@ -437,22 +457,6 @@ Dash as startup page
     :config
     (global-hl-todo-mode t))
 
-  ;; Email
-  (use-package notmuch
-    :ensure t
-    :config
-    (autoload 'notmuch "notmuch" "notmuch mail" t))
-
-  ;; RSS
-  (use-package elfeed
-    :ensure t)
-
-  (use-package elfeed-org
-    :ensure t
-    :init (elfeed-org)
-    :config
-    (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org")))
-
   (use-package helpful
     :ensure t)
 
@@ -464,13 +468,13 @@ Dash as startup page
 
   (defun c/lisp-pair-mode ()
     (if (derived-mode-p 'c-mode)
-        (setq electric-pair-pairs '(
-                                    (?\( . ?\))
-                                    (?\[ . ?\])
-                                    (?\{ . ?\})
-                                    (?\" . ?\")
-                                    (?\' . ?\')
-                                    ))
+	(setq electric-pair-pairs '(
+				    (?\( . ?\))
+				    (?\[ . ?\])
+				    (?\{ . ?\})
+				    (?\" . ?\")
+				    (?\' . ?\')
+				    ))
       (setq electric-pair-pairs '((?\( . ?\))))))
 
   (add-hook 'c-mode #'c/lisp-pair-mode)
@@ -502,11 +506,11 @@ Keep good company
       "Enable yasnippet for all backends.")
     (defun company-mode/backend-with-yas (backend)
       (if (or
-           (not company-mode/enable-yas)
-           (and (listp backend) (member 'company-yasnippet backend)))
-          backend
-        (append (if (consp backend) backend (list backend))
-                '(:with company-yasnippet)))))
+	   (not company-mode/enable-yas)
+	   (and (listp backend) (member 'company-yasnippet backend)))
+	  backend
+	(append (if (consp backend) backend (list backend))
+		'(:with company-yasnippet)))))
 
   (with-eval-after-load 'company
     (define-key company-active-map (kbd "M-n") 'nil)
@@ -517,33 +521,33 @@ Keep good company
     (add-hook 'c-mode-hook 'company-mode))
 
   ;; Backend for C/C++ autocompletion
-  (use-package irony
-    :ensure t
-    :config
-    (add-hook 'c++-mode-hook 'irony-mode)
-    (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+  ;;(use-package irony
+  ;;:ensure t
+  ;;:config
+  ;;(add-hook 'c++-mode-hook 'irony-mode)
+  ;;(add-hook 'c-mode-hook 'irony-mode)
+  ;;(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
   ;; Integration for company and irony
-  (use-package company-irony
-    :ensure t
-    :config
-    (require 'company)
-    (add-to-list 'company-backends 'company-irony)
-    (add-to-list 'company-backends 'company-c-headers))
+  ;;(use-package company-irony
+  ;;:ensure t
+  ;;:config
+  ;;(require 'company)
+  ;;(add-to-list 'company-backends 'company-irony)
+  ;;(add-to-list 'company-backends 'company-c-headers))
 
   ;; Backend for C/C++ autocompletion
-  ;;(use-package lsp-mode :commands lsp :ensure t :hook (prog-mode . lsp))
-  ;;(use-package lsp-ui :commands lsp-ui-mode :ensure t)
-  ;;(use-package company-lsp
-  ;;:ensure t
-  ;;:commands company-lsp
-  ;;:config
-  ;;(push 'company-lsp company-backends)
-  ;;(setq company-lsp-cache-candidates 'auto)
-  ;;(setq company-lsp-async t)
-  ;;(setq company-lsp-enable-snippet t)
-  ;;(push 'company-lsp company-backends)) ;; add company-lsp as a backend
+  (use-package lsp-mode :commands lsp :ensure t :hook (prog-mode . lsp))
+  (use-package lsp-ui :commands lsp-ui-mode :ensure t)
+  (use-package company-lsp
+    :ensure t
+    :commands company-lsp
+    :config
+    (push 'company-lsp company-backends)
+    (setq company-lsp-cache-candidates 'auto)
+    (setq company-lsp-async t)
+    (setq company-lsp-enable-snippet t)
+    (push 'company-lsp company-backends)) ;; add company-lsp as a backend
 #+END_SRC
 *** Snippets
 #+BEGIN_SRC emacs-lisp
@@ -557,11 +561,11 @@ Keep good company
 #+END_SRC
 *** Linter
 #+BEGIN_SRC emacs-lisp
-  ;;(use-package flycheck
-  ;;:ensure t
-  ;;:init (global-flycheck-mode t)
-  ;;:config
-  ;;(setq flycheck-clang-language-standard "gnu99"))
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode t)
+    :config
+    (setq flycheck-clang-language-standard "gnu99"))
 #+END_SRC
 *** Info
 #+BEGIN_SRC emacs-lisp
@@ -570,10 +574,10 @@ Keep good company
     :diminish eldoc-mode
     :init (add-hook 'company-mode-hook 'eldoc-mode))
 
-  ;;(use-package editorconfig
-  ;;:ensure t
-  ;;:config
-  ;;(editorconfig-mode 1))
+  (use-package editorconfig
+    :ensure t
+    :config
+    (editorconfig-mode 1))
 #+END_SRC
 * Keybinds
 Lazyness
@@ -589,34 +593,22 @@ I'm evil, yes i am
   (setq evil-motion-state-modes nil)
   (setq evil-move-cursor-back nil)
 
-  ;;(eval-after-load 'emms
-  ;;'(evil-set-initial-state 'emms-mode 'insert))
-
-
   (eval-after-load 'evil
     '(progn
-       (evil-make-overriding-map elfeed-search-mode-map 'normal)
-       (evil-make-overriding-map elfeed-show-mode-map 'normal)
        (evil-make-overriding-map helpful-mode-map 'normal)
        (evil-make-overriding-map help-mode-map 'normal)
-       (evil-make-overriding-map notmuch-show-mode-map 'normal)
        (evil-make-overriding-map calendar-mode-map 'normal)
 
        (add-hook 'calendar-mode-hook 'evil-normalize-keymaps)
-       (add-hook 'notmuch-show-mode-hook 'evil-normalize-keymaps)
        (add-hook 'help-mode-hook 'evil-normalize-keymaps)
-       (add-hook 'helpful-mode-hook 'evil-normalize-keymaps)
-       (add-hook 'elfeed-show-mode-hook 'evil-normalize-keymaps)
-       (add-hook 'elfeed-entry-mode-hook 'evil-normalize-keymaps)))
+       (add-hook 'helpful-mode-hook 'evil-normalize-keymaps)))
 
   (eval-after-load 'magit
     '(evil-set-initial-state 'magit-popup-mode 'emacs))
-
 #+END_SRC
 ** Setup
 #+BEGIN_SRC emacs-lisp
   (require 'custom-binds)
-  (require 'evil-numbers)
   (require 'general)
 
   (defconst rcs/key-leader "SPC")
@@ -640,27 +632,10 @@ I'm evil, yes i am
    :prefix rcs/key-leader
    :non-normal-prefix "C-SPC"
 
-   ;; Feeds
-   "mm" 'notmuch
-   "md" 'notmuch-delete-tagged
-   "mn" 'elfeed-open
-
    ;; Agenda
    "aa" 'org-agenda
    "am" 'calendar
    "ad" 'diary
-
-   ;; EMMS
-   ;;"mm" 'emms
-   ;;"mb" 'emms-smart-browse
-   ;;"mr" 'emms-player-mpd-update-all-reset-cache
-
-   ;;"ms" 'emms-setup-mpd
-   ;;"mS" 'emms-stop
-
-   ;;"mp" 'emms-previous
-   ;;"mn" 'emms-next
-   ;;"mP" 'emms-pause
    )
 #+END_SRC
 *** Org/Lisp
@@ -670,7 +645,7 @@ I'm evil, yes i am
    :keymaps 'org-mode-map
    :prefix rcs/key-leader
    :non-normal-prefix "C-SPC"
-   "e"  'eval-last-sexp
+   "e"	'eval-last-sexp
 
    "E" 'org-babel-execute-src-block
    "oa" 'org-agenda
@@ -691,7 +666,7 @@ I'm evil, yes i am
    :prefix rcs/key-leader
    :non-normal-prefix "C-SPC"
 
-   "e"  'eval-last-sexp
+   "e"	'eval-last-sexp
    "'" 'org-edit-src-exit
    )
 #+END_SRC
@@ -714,9 +689,12 @@ I'm evil, yes i am
 
    ;; Buffers
    "k"  'kill-current-buffer
-   "K"  'kill-all-buffers
    "b"  'ido-switch-buffer
+   "xk" 'kill-all-buffers
    "xb" 'ibuffer
+
+   ;; Folding
+   "TAB" 'origami-toggle-node
 
    ;; Windows
    "wo" 'switch-window
@@ -734,18 +712,12 @@ I'm evil, yes i am
    "ht" 'help-with-tutorial
    "hi" 'info
    "hy" 'yas-describe-tables
+   "hm" 'x86-lookup
 
    ;; Magit
    "gg" 'magit
    )
-
-  (general-define-key
-   :states '(normal emacs)
-   "C-k" 'evil-numbers/inc-at-pt
-   "C-j" 'evil-numbers/dec-at-pt
-   )
 #+END_SRC
-
 *** C/C++
 #+BEGIN_SRC emacs-lisp
 
@@ -758,6 +730,11 @@ I'm evil, yes i am
     "ct" 'create-tags
     )
 
+  (general-def
+    :states '(normal)
+    :keymaps 'c-mode-map
+    "<f12>" 'recompile
+    )
 #+END_SRC
 *** Dired
 #+BEGIN_SRC emacs-lisp

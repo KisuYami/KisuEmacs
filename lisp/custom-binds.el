@@ -38,24 +38,8 @@
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
 
-;; Email
-(defun notmuch-delete-tagged ()
-  "Delete emails tagged with deleted"
-  (interactive)
-  (shell-command "notmuch search --output=files --exclude=false tag:deleted > email_list")
-  (shell-command "xargs rm < email_list")
-  (message "%s Emails removed" (shell-command "wc ./email_list -l"))
-  (shell-command "rm email_list")
-  (shell-command "notmuch new"))
-
-(defun elfeed-open ()
-  "Open and update elfeed"
-  (interactive)
-  (elfeed-update)
-  (elfeed))
-
 (defun indent-buffer ()
-  "Indents an entire buffer using the default intenting scheme."
+  "Indent an entire buffer using the default intenting scheme."
   (interactive)
   (save-excursion
     (delete-trailing-whitespace)
