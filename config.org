@@ -18,6 +18,23 @@
   (setq-default indent-tabs-mode t)
   (setq tab-width 4) ; or any other preferred value
 
+  ;; Bakcup
+(defvar --backup-directory (concat user-emacs-directory "backups"))
+(if (not (file-exists-p --backup-directory))
+        (make-directory --backup-directory t))
+(setq backup-directory-alist `(("." . ,--backup-directory)))
+(setq make-backup-files t               ; backup of a file the first time it is saved.
+      backup-by-copying t               ; don't clobber symlinks
+      version-control t                 ; version numbers for backup files
+      delete-old-versions t             ; delete excess backup files silently
+      delete-by-moving-to-trash t
+      kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
+      kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
+      auto-save-default t               ; auto-save every buffer that visits a file
+      auto-save-timeout 20              ; number of seconds idle time before auto-save (default: 30)
+      auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
+      )
+
   ;; Local LISP
   (add-to-list 'load-path "~/.emacs.d/lisp/")
 
@@ -26,10 +43,6 @@
 
   ;; Ring
   (setq ring-bell-function 'ignore)
-
-  ;; Disable backup
-  (setq backup-inhibited t)
-  (setq auto-save-default nil)
 
   ;; UTF-8
   (setq locale-coding-system 'utf-8)
@@ -196,17 +209,17 @@ A confy theme
     (disable-theme 'doom-node-light)
     (load-theme 'doom-one t))
 
-  (defun theme-switcher ()
-    "Change emacs theme based on the day time"
+  (defvar last-theme)
+  (setq last-theme 0)
+
+  (defun rcs/toggle-theme ()
+    "Toggle between dark and white themes"
     (interactive)
-    (let ((current-hour (string-to-number (format-time-string "%H"))))
-      (if (or (< current-hour 6) (> current-hour 20)) (set-dark-theme) (set-light-theme))))
-
-  ;; Run at every 3600 seconds, after 0s delay
-  (run-with-timer 0 3600 'theme-switcher)
-
-  ;;(set-frame-parameter (selected-frame) 'alpha '(80 80))
-  ;;(add-to-list 'default-frame-alist '(alpha 80 80))
+    (if (= last-theme 0)
+        (progn (set-light-theme) (setq last-theme 1))
+        (progn (set-dark-theme) (setq last-theme 0))
+        )
+    )
 #+END_SRC
 ** Overall
 Remove everything that reminds me of a GUI
@@ -246,7 +259,10 @@ Dash as startup page
   (use-package projectile
     :ensure t
     :config
-    (projectile-mode +1))
+    (projectile-mode +1)
+    (setq projectile-project-search-path '("~/Dev/Software"))
+    (setq projectile-enable-caching t)
+    )
 
   (use-package page-break-lines
     :ensure t)
@@ -563,9 +579,15 @@ Keep good company
   ;;(add-to-list 'company-backends 'company-c-headers))
 
   ;; Backend for C/C++ autocompletion
-  (use-package lsp-mode :commands lsp :ensure t :hook (prog-mode . lsp) :config)
-
-  (use-package lsp-ui :commands lsp-ui-mode :ensure t)
+  (use-package lsp-mode
+    :commands lsp
+    :ensure t
+    :hook (prog-mode . lsp)
+    :config
+    (setq lsp-auto-guess-root t))
+#+END_SRC
+*** UI
+#+BEGIN_SRC emacs-lisp
   (use-package company-lsp
     :ensure t
     :commands company-lsp
@@ -575,6 +597,17 @@ Keep good company
     (setq company-lsp-async t)
     (setq company-lsp-enable-snippet t)
     (push 'company-lsp company-backends)) ;; add company-lsp as a backend
+
+  (use-package lsp-ui :commands lsp-ui-mode :ensure t)
+
+  (use-package treemacs
+    :ensure t)
+
+  (use-package lsp-treemacs
+    :ensure t
+    :hook (treemacs-mode . treemacs-lsp-mode)
+    :config
+    (lsp-treemacs-sync-mode 1))
 #+END_SRC
 *** Snippets
 #+BEGIN_SRC emacs-lisp
@@ -721,7 +754,8 @@ I'm evil, yes i am
    "xb" 'ibuffer
 
    ;; UI
-   "xm" 'hide-mode-line-mode
+   "um" 'hide-mode-line-mode
+   "ut" 'rcs/toggle-theme
 
    ;; Windows
    "wo" 'switch-window
@@ -743,6 +777,9 @@ I'm evil, yes i am
 
    ;; Magit
    "gg" 'magit
+
+   ;; Treemacs
+   "t" 'treemacs
    )
 #+END_SRC
 *** C/C++

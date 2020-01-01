@@ -1,27 +1,41 @@
-*.html
-*.eld
-*.dat
-*ido*
-*.html
-*.pdf
-*.tex
+.local/
+var/
+modules/private
+auto-save-list/
+transient/
+backups/
+ido.last
+recentf*
+.lsp-session*
+*#*
+.yas-compiled-snippets.el
 
-diary
-eshell
-network-security.data
-.python-environments
-.emacs_workgroups
-irony
-dmenu-items
-config.el
-recentf
-smex-items
+# folders created by Cask
+.cask/
+cask/
+elpa/
+
+# emacs tempfiles that shouldn't be there
+.mc-lists.el
+.org-id-locations
+.tern-port
+.extension/
+.dap-breakpoints
+auto-save-list/
+semanticdb
+ede-projects.el
 tramp
-emms
-auto-save-list
-elpa
-transient
-auto-complete-love
-auto-complete-lua
-session.*
-#*#
+smex-items
+network-security.data
+
+# compiled files
+*.elc
+*.lib
+*.fas
+*.dat
+*.eld
+
+# transient/os temp files
+*.cache*
+*.log
+.directory
