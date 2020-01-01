@@ -47,6 +47,7 @@
   (setq org-confirm-babel-evaluate nil)
   (setq org-export-with-smart-quotes t)
   (setq org-src-window-setup 'current-window)
+  (setq org-agenda-files (quote ("~/Agenda/Index.org")))
   (add-hook 'org-mode-hook 'org-indent-mode)
 
   (add-to-list 'org-structure-template-alist
@@ -180,8 +181,29 @@ A confy theme
     :config
     (load-theme 'doom-one t)
     (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-	  doom-themes-enable-italic t) ; if nil, italics is universally disabled
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
     (doom-themes-org-config))
+
+  (defun set-light-theme ()
+    "Set the light theme with some customization if needed."
+    (interactive)
+    (disable-theme 'doom-one)
+    (load-theme 'doom-nord-light t))
+
+  (defun set-dark-theme ()
+    "Set the dark theme with some customization if needed."
+    (interactive)
+    (disable-theme 'doom-node-light)
+    (load-theme 'doom-one t))
+
+  (defun theme-switcher ()
+    "Change emacs theme based on the day time"
+    (interactive)
+    (let ((current-hour (string-to-number (format-time-string "%H"))))
+      (if (or (< current-hour 6) (> current-hour 20)) (set-dark-theme) (set-light-theme))))
+
+  ;; Run at every 3600 seconds, after 0s delay
+  (run-with-timer 0 3600 'theme-switcher)
 
   ;;(set-frame-parameter (selected-frame) 'alpha '(80 80))
   ;;(add-to-list 'default-frame-alist '(alpha 80 80))
@@ -195,8 +217,8 @@ Remove everything that reminds me of a GUI
 
   ;; Scroll before cursor hits the end
   (setq scroll-margin 3
-        scroll-conservatively 9999
-        scroll-step 1)
+	scroll-conservatively 9999
+	scroll-step 1)
 
   ;; Show line numbers
   (defun rcs/line-numbers ()
@@ -214,7 +236,7 @@ Remove everything that reminds me of a GUI
   (global-hl-line-mode 1)
 
   ;; Set font
-  (add-to-list 'default-frame-alist '(font . "Hack-11" ))
+  (add-to-list 'default-frame-alist '(font . "Hack-10" ))
   ;; Maximized window
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+END_SRC
@@ -439,6 +461,10 @@ Dash as startup page
   (use-package php-mode
     :ensure t)
 
+  (use-package hide-mode-line
+    :ensure t
+    :hook (hide-modeline-mode . emacs-startup-hook))
+
   (use-package x86-lookup
     :ensure t
     :config
@@ -537,7 +563,8 @@ Keep good company
   ;;(add-to-list 'company-backends 'company-c-headers))
 
   ;; Backend for C/C++ autocompletion
-  (use-package lsp-mode :commands lsp :ensure t :hook (prog-mode . lsp))
+  (use-package lsp-mode :commands lsp :ensure t :hook (prog-mode . lsp) :config)
+
   (use-package lsp-ui :commands lsp-ui-mode :ensure t)
   (use-package company-lsp
     :ensure t
@@ -615,8 +642,8 @@ I'm evil, yes i am
 
   ;; Unbind Everything
   (dolist (key '("\C-a" "\C-b" "\C-c" "\C-d" "\C-e" "\C-f" "\C-g"
-                 "\C-h" "\C-k" "\C-l" "\C-n" "\C-o" "\C-p" "\C-q"
-                 "\C-t" "\C-u" "\C-v" "\C-x" "\C-z" "\e"))
+		 "\C-h" "\C-k" "\C-l" "\C-n" "\C-o" "\C-p" "\C-q"
+		 "\C-t" "\C-u" "\C-v" "\C-x" "\C-z" "\e"))
     (global-unset-key key))
 
   (global-set-key (kbd "M-x") 'smex)
@@ -684,17 +711,17 @@ I'm evil, yes i am
 
    ;; Files
    "su" 'sudo-edit
-   "f"  'ido-find-file
-   "F"  'dired
+   "f"	'ido-find-file
+   "F"	'dired
 
    ;; Buffers
-   "k"  'kill-current-buffer
-   "b"  'ido-switch-buffer
+   "k"	'kill-current-buffer
+   "b"	'ido-switch-buffer
    "xk" 'kill-all-buffers
    "xb" 'ibuffer
 
-   ;; Folding
-   "TAB" 'origami-toggle-node
+   ;; UI
+   "xm" 'hide-mode-line-mode
 
    ;; Windows
    "wo" 'switch-window

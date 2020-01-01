@@ -43,8 +43,9 @@
   (interactive)
   (save-excursion
     (delete-trailing-whitespace)
-    (indent-region (point-min) (point-max) nil)
-    (tabify (point-min) (point-max))))
+    (indent-region (point-min) (point-max))
+    (tabify (point-min) (point-max)))
+    )
 
   (defun create-tags (dir-name)
     "Create tags file."
