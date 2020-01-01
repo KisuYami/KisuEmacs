@@ -4,6 +4,7 @@ modules/private
 auto-save-list/
 transient/
 backups/
+autosaves/
 ido.last
 recentf*
 .lsp-session*
