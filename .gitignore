@@ -10,6 +10,7 @@ recentf*
 .lsp-session*
 *#*
 .yas-compiled-snippets.el
+irony/
 
 # folders created by Cask
 .cask/
@@ -35,6 +36,7 @@ network-security.data
 *.fas
 *.dat
 *.eld
+config.el
 
 # transient/os temp files
 *.cache*
