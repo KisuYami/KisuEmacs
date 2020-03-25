@@ -34,16 +34,16 @@
   (package-install 'use-package))
 
 ;;; This is the actual config file. It is omitted if it doesn't exist so emacs won't refuse to launch.
-(when (file-readable-p "~/.emacs.d/config.org")
-  (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
+(when (file-readable-p (expand-file-name "config.org" user-emacs-directory))
+  (org-babel-load-file (expand-file-name "config.org" user-emacs-directory)))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-agenda-files nil)
  '(package-selected-packages
-   (quote
-    (htmlize emacs-htmlize emacs-htmlise general yasnippet-snippets yasnippet company-irony irony company ox-reveal ox-twbs org-bullets hl-todo flycheck-ledger ledger-mode flycheck helpful x86-lookup git-gutter-fringe+ git-gutter+ evil-magit magit switch-window ido-vertical-mode dashboard page-break-lines projectile sudo-edit which-key smex evil doom-modeline doom-themes use-package))))
+   '(htmlize emacs-htmlize emacs-htmlise general yasnippet-snippets yasnippet company-irony irony company ox-reveal ox-twbs org-bullets hl-todo flycheck-ledger ledger-mode flycheck helpful x86-lookup git-gutter-fringe+ git-gutter+ evil-magit magit switch-window ido-vertical-mode dashboard page-break-lines projectile sudo-edit which-key smex evil doom-modeline doom-themes use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

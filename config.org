@@ -59,18 +59,6 @@ Show relative line numbers
 * Editor
 ** Lisp
 Usefull functions that are plain simple to understand
-*** Config Visit/Reload
-#+BEGIN_SRC emacs-lisp
-  (defun config-visit ()
-    "Open Config Files"
-    (interactive)
-    (find-file "~/.emacs.d/config.org"))
-
-  (defun config-reload ()
-    "Reload Config Files"
-    (interactive)
-    (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
-#+END_SRC
 *** Split Windows
 #+BEGIN_SRC emacs-lisp
   (defun split-and-fallow-h ()
@@ -187,8 +175,8 @@ The master set of keybinds
    :non-normal-prefix "C-SPC"
 
    ;; Config
-   "cr" '(lambda () (interactive) (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
-   "ce" '(lambda () (interactive) (find-file "~/.emacs.d/config.org"))
+   "cr" '(lambda () (interactive) (org-babel-load-file (expand-file-name "config.org" user-emacs-directory)))
+   "ce" '(lambda () (interactive) (find-file (expand-file-name "config.org" user-emacs-directory)))
    "cf" 'indent-buffer
 
    ;; Files
@@ -336,26 +324,27 @@ Dash as startup page
 #+END_SRC
 ** Backup/Autosave
 #+BEGIN_SRC emacs-lisp
-  (if (not (file-exists-p "~/.emacs.d/backups/"))
-      (make-directory "~/.emacs.d/backups/" t))
-  (setq backup-directory-alist `(("." . "~/.emacs.d/backups/")))
+  (if (not (file-exists-p "~/.local/share/emacs/backups/"))
+      (make-directory "~/.local/share/emacs/backups/" t))
+
+  (setq backup-directory-alist `(("." . "~/.local/share/emacs/backups/")))
   (setq make-backup-files t		; backup of a file the first time it is saved.
-	backup-by-copying t		; don't clobber symlinks
-	version-control t			; version numbers for backup files
-	delete-old-versions t		; delete excess backup files silently
-	delete-by-moving-to-trash t
-	kept-old-versions 6		; oldest versions to keep when a new numbered backup is made (default: 2)
-	kept-new-versions 9		; newest versions to keep when a new numbered backup is made (default: 2)
-	auto-save-default t		; auto-save every buffer that visits a file
-	auto-save-timeout 20		; number of seconds idle time before auto-save (default: 30)
-	auto-save-interval 200		; number of keystrokes between auto-saves (default: 300)
-	)
+        backup-by-copying t		; don't clobber symlinks
+        version-control t			; version numbers for backup files
+        delete-old-versions t		; delete excess backup files silently
+        delete-by-moving-to-trash t
+        kept-old-versions 6		; oldest versions to keep when a new numbered backup is made (default: 2)
+        kept-new-versions 9		; newest versions to keep when a new numbered backup is made (default: 2)
+        auto-save-default t		; auto-save every buffer that visits a file
+        auto-save-timeout 20		; number of seconds idle time before auto-save (default: 30)
+        auto-save-interval 200		; number of keystrokes between auto-saves (default: 300)
+        )
 
   ;; Auto-save
-  (if (not (file-exists-p "~/.emacs.d/autosaves/"))
-      (make-directory "~/.emacs.d/autosaves/" t))
+  (if (not (file-exists-p "~/.local/share/emacs/autosaves/"))
+      (make-directory "~/.local/share/emacs/autosaves/" t))
   (setq auto-save-file-name-transforms
-	`((".*" "~/.emacs.d/autosaves/" t)))
+        `((".*" "~/.local/share/emacs/autosaves/" t)))
 #+END_SRC
 ** Encoding/text
 #+BEGIN_SRC emacs-lisp
