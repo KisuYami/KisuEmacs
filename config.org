@@ -9,6 +9,9 @@ Remove everything that reminds me of a GUI
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
+
+  ;; Fullscreen at startup
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+END_SRC
 ** Theme
 A confy theme
@@ -282,6 +285,14 @@ The master set of keybinds
     (setq switch-window-increase 4)
     (setq switch-window-threshold 2))
 #+END_SRC
+*** Hungry Delete
+#+BEGIN_SRC emacs-lisp
+  (use-package hungry-delete
+    :ensure t
+    :bind (("<backspace>" . hungry-delete-backward)
+	   ("<delete>" . hungry-delete-forward))
+    :config (global-hungry-delete-mode))
+#+END_SRC
 ** Startup Page
 Dash as startup page
 *** Start Page
@@ -329,22 +340,22 @@ Dash as startup page
 
   (setq backup-directory-alist `(("." . "~/.local/share/emacs/backups/")))
   (setq make-backup-files t		; backup of a file the first time it is saved.
-        backup-by-copying t		; don't clobber symlinks
-        version-control t			; version numbers for backup files
-        delete-old-versions t		; delete excess backup files silently
-        delete-by-moving-to-trash t
-        kept-old-versions 6		; oldest versions to keep when a new numbered backup is made (default: 2)
-        kept-new-versions 9		; newest versions to keep when a new numbered backup is made (default: 2)
-        auto-save-default t		; auto-save every buffer that visits a file
-        auto-save-timeout 20		; number of seconds idle time before auto-save (default: 30)
-        auto-save-interval 200		; number of keystrokes between auto-saves (default: 300)
-        )
+	backup-by-copying t		; don't clobber symlinks
+	version-control t			; version numbers for backup files
+	delete-old-versions t		; delete excess backup files silently
+	delete-by-moving-to-trash t
+	kept-old-versions 6		; oldest versions to keep when a new numbered backup is made (default: 2)
+	kept-new-versions 9		; newest versions to keep when a new numbered backup is made (default: 2)
+	auto-save-default t		; auto-save every buffer that visits a file
+	auto-save-timeout 20		; number of seconds idle time before auto-save (default: 30)
+	auto-save-interval 200		; number of keystrokes between auto-saves (default: 300)
+	)
 
   ;; Auto-save
   (if (not (file-exists-p "~/.local/share/emacs/autosaves/"))
       (make-directory "~/.local/share/emacs/autosaves/" t))
   (setq auto-save-file-name-transforms
-        `((".*" "~/.local/share/emacs/autosaves/" t)))
+	`((".*" "~/.local/share/emacs/autosaves/" t)))
 #+END_SRC
 ** Encoding/text
 #+BEGIN_SRC emacs-lisp
@@ -464,12 +475,6 @@ Dash as startup page
     :init (global-flycheck-mode t)
     :config
     (setq flycheck-clang-language-standard "gnu99"))
-
-  (use-package ledger-mode
-    :ensure t)
-
-  (use-package flycheck-ledger
-    :ensure t)
 #+END_SRC
 *** Highlighting
 #+BEGIN_SRC emacs-lisp
@@ -551,9 +556,9 @@ Dash as startup page
     :ensure t)
 
   (setq org-latex-pdf-process
-        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+	'("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+	  "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+	  "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 #+END_SRC
 **** Keybinds
 #+BEGIN_SRC emacs-lisp

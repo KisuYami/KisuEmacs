@@ -43,7 +43,7 @@
  ;; If there is more than one, they won't work right.
  '(org-agenda-files nil)
  '(package-selected-packages
-   '(htmlize emacs-htmlize emacs-htmlise general yasnippet-snippets yasnippet company-irony irony company ox-reveal ox-twbs org-bullets hl-todo flycheck-ledger ledger-mode flycheck helpful x86-lookup git-gutter-fringe+ git-gutter+ evil-magit magit switch-window ido-vertical-mode dashboard page-break-lines projectile sudo-edit which-key smex evil doom-modeline doom-themes use-package)))
+   '(hungry-delete pkgbuild-mode htmlize emacs-htmlize emacs-htmlise general yasnippet-snippets yasnippet company-irony irony company ox-reveal ox-twbs org-bullets hl-todo flycheck-ledger ledger-mode flycheck helpful x86-lookup git-gutter-fringe+ git-gutter+ evil-magit magit switch-window ido-vertical-mode dashboard page-break-lines projectile sudo-edit which-key smex evil doom-modeline doom-themes use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
