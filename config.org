@@ -54,8 +54,7 @@ Show relative line numbers
       (require 'display-line-numbers)
       (global-display-line-numbers-mode 1)
       (display-line-numbers-update-width)
-      (setq display-line-numbers-type 'relative))
-    )
+      (setq display-line-numbers-type 'relative)))
 
   (add-hook 'emacs-startup-hook 'rcs/line-numbers)
 #+END_SRC
@@ -104,6 +103,16 @@ Usefull functions that are plain simple to understand
     (interactive "DDirectory: ")
     (eshell-command
      (format "find %s -type f -name \"*.[ch]\" | etags -" dir-name)))
+#+END_SRC
+** Pairs
+#+BEGIN_SRC emacs-lisp
+  (setq electric-pair-pairs '((?\( . ?\))
+			      (?\[ . ?\])
+			      (?\{ . ?\})
+			      (?\" . ?\")
+			      (?\' . ?\')))
+
+  (electric-pair-mode 1)
 #+END_SRC
 ** Commands
 #+BEGIN_SRC emacs-lisp
@@ -164,6 +173,8 @@ Removing all the default emacs keybinds
 **** KEmacs
 The master set of keybinds
 #+BEGIN_SRC emacs-lisp
+  (cua-mode 1)
+
   (use-package general
     :ensure t)
 
@@ -216,6 +227,14 @@ The master set of keybinds
    )
 #+END_SRC
 ** Navigation
+*** Copy/Paste
+#+BEGIN_SRC emacs-lisp
+  ;; after copy Ctrl+c in Linux X11, you can paste by `yank' in emacs
+  (setq x-select-enable-clipboard t)
+
+  ;; after mouse selection in X11, you can paste by `yank' in emacs
+  (setq x-select-enable-primary t)
+#+END_SRC
 *** I-DO
 #+BEGIN_SRC emacs-lisp
   (setq ido-enable-flex-matching nil)
@@ -229,51 +248,6 @@ The master set of keybinds
     (ido-vertical-mode 1))
 
   (setq ido-vertical-define-keys 'C-n-and-C-p-only)
-#+END_SRC
-*** Ibuffer
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'ibuffer-mode-hook
-	    (lambda ()
-	      (ibuffer-auto-mode 1)
-	      (ibuffer-switch-to-saved-filter-groups "default")))
-
-  (setq ibuffer-expert t)
-  (setq ibuffer-show-empty-filter-groups nil)
-
-  (setq ibuffer-saved-filter-groups
-	(quote (("default"
-		 ("dired"
-		  (mode . dired-mode))
-		 ("programming"
-		  (or
-		   (mode . css-mode)
-		   (mode . html-mode)
-		   (mode . markdown-mode)
-		   (mode . org-mode)
-		   (mode . asm-mode)
-		   (mode . c-mode)
-		   (mode . prog-mode)))
-		 ("planner"
-		  (or
-		   (name . "^\\**Calendar\\**$")
-		   (name . "^diary$")
-		   (mode . muse-mode)))
-		 ("emacs"
-		  (or
-		   (name . "^\\**dashboard\\**$")
-		   (name . "^\\**scratch\\**$")
-		   (name . "^\\**Messages\\**$")
-		   (name . "^\\**elfeed-log\\**$")))
-		 ("feeds"
-		  (or
-		   (mode . message-mode)
-		   (mode . bbdb-mode)
-		   (mode . mail-mode)
-		   (mode . gnus-group-mode)
-		   (mode . gnus-summary-mode)
-		   (mode . gnus-article-mode)
-		   (name . "^\\.bbdb$")
-		   (name . "^\\.newsrc-dribble")))))))
 #+END_SRC
 *** Swith Window
 #+BEGIN_SRC emacs-lisp
@@ -333,6 +307,18 @@ Dash as startup page
    "Ad" 'diary
    )
 #+END_SRC
+** Encoding/text
+#+BEGIN_SRC emacs-lisp
+  ;; UTF-8
+  (setq locale-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (set-selection-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8)
+
+  ;; Set font
+  (add-to-list 'default-frame-alist '(font . "Hack-11" ))
+#+END_SRC
 ** Backup/Autosave
 #+BEGIN_SRC emacs-lisp
   (if (not (file-exists-p "~/.local/share/emacs/backups/"))
@@ -356,18 +342,6 @@ Dash as startup page
       (make-directory "~/.local/share/emacs/autosaves/" t))
   (setq auto-save-file-name-transforms
 	`((".*" "~/.local/share/emacs/autosaves/" t)))
-#+END_SRC
-** Encoding/text
-#+BEGIN_SRC emacs-lisp
-  ;; UTF-8
-  (setq locale-coding-system 'utf-8)
-  (set-terminal-coding-system 'utf-8)
-  (set-keyboard-coding-system 'utf-8)
-  (set-selection-coding-system 'utf-8)
-  (prefer-coding-system 'utf-8)
-
-  ;; Set font
-  (add-to-list 'default-frame-alist '(font . "Hack-10" ))
 #+END_SRC
 * Programming
 ** Info
@@ -449,16 +423,6 @@ Dash as startup page
 #+END_SRC
 *** Docs
 #+BEGIN_SRC emacs-lisp
-  (use-package eldoc
-    :ensure t
-    :diminish eldoc-mode
-    :init (add-hook 'company-mode-hook 'eldoc-mode))
-
-  (use-package x86-lookup
-    :ensure t
-    :config
-    (setq x86-lookup-pdf "~/Documents/Programming/C/Reference/Intel_x86_64_Manual.pdf"))
-
   (use-package helpful
     :ensure t)
 
@@ -468,29 +432,23 @@ Dash as startup page
        (evil-make-overriding-map helpful-mode-map 'normal)
        (add-hook 'helpful-mode-hook 'evil-normalize-keymaps)))
 #+END_SRC
-*** Linters
-#+BEGIN_SRC emacs-lisp
-  (use-package flycheck
-    :ensure t
-    :init (global-flycheck-mode t)
-    :config
-    (setq flycheck-clang-language-standard "gnu99"))
-#+END_SRC
 *** Highlighting
 #+BEGIN_SRC emacs-lisp
   (use-package whitespace
     :ensure t
     :config
-    (setq whitespace-line-column 80) ;; limit line length
+    (setq whitespace-line-column 81) ;; limit line length
     (setq whitespace-style '(face lines-tail))
 
-    (add-hook 'prog-mode-hook 'whitespace-mode)
-    (whitespace-mode 1))
+    (add-hook 'prog-mode-hook 'whitespace-mode))
 
   (use-package hl-todo
     :ensure t
     :config
     (global-hl-todo-mode t))
+
+  ;; turn on highlight matching brackets when cursor is on one
+  (show-paren-mode 1)
 #+END_SRC
 ** Modes
 *** Org
@@ -514,47 +472,30 @@ Dash as startup page
 **** Babel
 #+BEGIN_SRC emacs-lisp
   (setq org-confirm-babel-evaluate nil)
-  (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0.11.jar")
 
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((R . t)
      (latex . t)
      (C . t)
-     (ditaa . t)
      (shell . t)))
 #+END_SRC
-**** Agenda
+**** Diary
 #+BEGIN_SRC emacs-lisp
-  (setq org-agenda-files (quote ("~/Agenda/Index.org")))
+  (setq org-agenda-files (quote ("~/Documents/Org/Agenda.org")))
 
   (setq view-diary-entries-initially t
 	mark-diary-entries-in-calendar t
 	number-of-diary-entries 7)
   (add-hook 'diary-display-hook 'fancy-diary-display)
   (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
-
-  (defun alt-clean-equal-signs ()
-    "This function makes lines of = signs invisible."
-    (goto-char (point-min))
-    (let ((state buffer-read-only))
-      (when state (setq buffer-read-only nil))
-      (while (not (eobp))
-	(search-forward-regexp "^=+$" nil 'move)
-	(add-text-properties (match-beginning 0)
-			     (match-end 0)
-			     '(invisible t)))
-      (when state (setq buffer-read-only t))))
-
-  (add-hook 'fancy-diary-display-mode-hook
-	    '(lambda ()
-	       (alt-clean-equal-signs)))
 #+END_SRC
 **** Exports
 #+BEGIN_SRC emacs-lisp
   (use-package ox-twbs
     :ensure t)
 
+  ;; Fix citations
   (setq org-latex-pdf-process
 	'("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
 	  "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
@@ -599,22 +540,6 @@ Dash as startup page
 #+END_SRC
 *** C
 Specific configurations for C programming.
-**** Pairs
-#+BEGIN_SRC emacs-lisp
-  (defun c/lisp-pair-mode ()
-    (if (derived-mode-p 'c-mode)
-	(setq electric-pair-pairs '(
-				    (?\( . ?\))
-				    (?\[ . ?\])
-				    (?\{ . ?\})
-				    (?\" . ?\")
-				    (?\' . ?\')
-				    ))
-      (setq electric-pair-pairs '((?\( . ?\))))))
-
-  (add-hook 'c-mode #'c/lisp-pair-mode)
-  (electric-pair-mode t)
-#+END_SRC
 **** Keybinds
 #+BEGIN_SRC emacs-lisp
   (general-def
