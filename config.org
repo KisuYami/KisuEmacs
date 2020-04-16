@@ -20,7 +20,7 @@ A confy theme
     :ensure t
     :config
     (load-theme 'doom-one t)
-    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+    (setq doom-themes-enable-bold t	  ; if nil, bold is universally disabled
 	  doom-themes-enable-italic t) ; if nil, italics is universally disabled
     (doom-themes-org-config))
 #+END_SRC
@@ -138,6 +138,9 @@ Usefull functions that are plain simple to understand
 *** Evil
 Am I evil? Yes, I am!
 #+BEGIN_SRC emacs-lisp
+  ;; Fix tab on terminal
+  (setq evil-want-C-i-jump nil)
+
   (use-package evil
     :ensure t
     :init (evil-mode 1))
@@ -161,15 +164,7 @@ Am I evil? Yes, I am!
 *** Keymaps
 Keybinds that shold be used trough all the modes.
 The default leader key is =space= for all the keybinds trough my config
-**** Emacs
-Removing all the default emacs keybinds
-#+BEGIN_SRC emacs-lisp
-  ;; Unbind Everything
-  (dolist (key '("\C-a" "\C-b" "\C-c" "\C-d" "\C-e" "\C-f" "\C-g"
-		 "\C-h" "\C-k" "\C-l" "\C-n" "\C-o" "\C-p" "\C-q"
-		 "\C-t" "\C-u" "\C-v" "\C-x" "\C-z" "\e"))
-    (global-unset-key key))
-#+END_SRC
+**** Emacs Removing all the default emacs keybinds #+BEGIN_SRC emacs-lisp ;; Unbind Everything (dolist (key '("\C-a" "\C-b" "\C-c" "\C-d" "\C-e" "\C-f" "\C-g" "\C-h" "\C-k" "\C-l" "\C-n" "\C-o" "\C-p" "\C-q" "\C-t" "\C-u" "\C-v" "\C-x" "\C-z" "\e")) (global-unset-key key)) #+END_SRC
 **** KEmacs
 The master set of keybinds
 #+BEGIN_SRC emacs-lisp
@@ -361,7 +356,7 @@ Dash as startup page
     :ensure t
     :config
     (setq-default fringes-outside-margins t)
-    (setq-default left-fringe-width  3)
+    (setq-default left-fringe-width	 3)
     (setq-default right-fringe-width 0)
 
     (fringe-helper-define 'git-gutter-fr+-added nil
@@ -468,6 +463,28 @@ Dash as startup page
     :ensure t
     :config
     (add-hook 'org-mode-hook(lambda () (org-bullets-mode))))
+#+END_SRC
+**** Prettify
+#+BEGIN_SRC emacs-lisp
+  (defun setup-pragmata-ligatures ()
+    (setq prettify-symbols-alist
+	  (append prettify-symbols-alist
+		  '(("[ ]" . "☐")
+		    ("[X]" . "☑")
+		    ("[-]" . "❍")
+		    ("#+BEGIN_SRC" . "λ")
+		    ("#+END_SRC" . "λ")))))
+
+  (defun refresh-pretty ()
+    (prettify-symbols-mode -1)
+    (prettify-symbols-mode +1))
+
+  ;; Hooks for modes in which to install the Pragmata ligatures
+  (mapc (lambda (hook)
+	  (add-hook hook (lambda () (setup-pragmata-ligatures) (refresh-pretty))))
+	'(text-mode-hook
+	  prog-mode-hook))
+  (global-prettify-symbols-mode +1)
 #+END_SRC
 **** Babel
 #+BEGIN_SRC emacs-lisp
