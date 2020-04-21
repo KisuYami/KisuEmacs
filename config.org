@@ -158,8 +158,6 @@ Am I evil? Yes, I am!
        (add-hook 'calendar-mode-hook 'evil-normalize-keymaps)
        (add-hook 'help-mode-hook 'evil-normalize-keymaps)))
 
-  (eval-after-load 'magit
-    '(evil-set-initial-state 'magit-popup-mode 'emacs))
 #+END_SRC
 *** Keymaps
 Keybinds that shold be used trough all the modes.
@@ -216,9 +214,6 @@ The master set of keybinds
    "hi" 'info
    "hy" 'yas-describe-tables
    "hm" 'x86-lookup
-
-   ;; Magit
-   "gg" 'magit
    )
 #+END_SRC
 ** Navigation
@@ -342,15 +337,10 @@ Dash as startup page
 ** Info
 *** Git
 #+BEGIN_SRC emacs-lisp
-  (use-package magit
-    :ensure t)
-
-  (use-package evil-magit
-    :ensure t)
-
   (use-package git-gutter+
     :ensure t
     :init (global-git-gutter+-mode +1))
+
 
   (use-package git-gutter-fringe+
     :ensure t
@@ -358,63 +348,11 @@ Dash as startup page
     (setq-default fringes-outside-margins t)
     (setq-default left-fringe-width	 3)
     (setq-default right-fringe-width 0)
+    (setq git-gutter+-fringe-string (format "%s" (make-list 17 "XXXXXX\n")))
 
-    (fringe-helper-define 'git-gutter-fr+-added nil
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX")
-
-    (fringe-helper-define 'git-gutter-fr+-deleted nil
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX")
-
-    (fringe-helper-define 'git-gutter-fr+-modified nil
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"
-      "XXXXXXXX"))
+    (fringe-helper-define 'git-gutter-fr+-added nil git-gutter+-fringe-string)
+    (fringe-helper-define 'git-gutter-fr+-deleted nil git-gutter+-fringe-string)
+    (fringe-helper-define 'git-gutter-fr+-modified nil git-gutter+-fringe-string))
 #+END_SRC
 *** Docs
 #+BEGIN_SRC emacs-lisp
