@@ -52,11 +52,11 @@ Show relative line numbers
     (interactive)
     (progn
       (require 'display-line-numbers)
-      (global-display-line-numbers-mode 1)
+      (display-line-numbers-mode 1)
       (display-line-numbers-update-width)
       (setq display-line-numbers-type 'relative)))
 
-  (add-hook 'emacs-startup-hook #'rcs/line-numbers)
+  (add-hook 'prog-mode-hook #'rcs/line-numbers)
 #+END_SRC
 * Editor
 ** Lisp
@@ -72,11 +72,18 @@ Usefull functions that are plain simple to understand
 *** Compile Config
 Actions performed on specific
 #+BEGIN_SRC emacs-lisp
-    (defun rcs/byte-compile-config ()
-      (interactive)
-      "Byte compile emacs config"
-      (byte-compile-file (expand-file-name "config.el" user-emacs-directory))
-      (byte-compile-file (expand-file-name "init.el" user-emacs-directory)))
+  (defun rcs/byte-compile-config ()
+    (interactive)
+    "Byte compile emacs config"
+    (byte-compile-file (expand-file-name "config.el" user-emacs-directory))
+    (byte-compile-file (expand-file-name "init.el" user-emacs-directory)))
+#+END_SRC
+*** Discord Rich Presence
+#+BEGIN_SRC emacs-lisp
+  (use-package elcord
+    :ensure t
+    :config
+    (elcord-mode))
 #+END_SRC
 *** Indent Buffer
 #+BEGIN_SRC emacs-lisp
@@ -88,6 +95,16 @@ Actions performed on specific
       (indent-region (point-min) (point-max))
       (tabify (point-min) (point-max)))
     )
+#+END_SRC
+*** Kill Buffers
+#+BEGIN_SRC emacs-lisp
+  (defun kill-current-buffer ()
+    (interactive)
+    (kill-buffer (current-buffer)))
+
+  (defun kill-all-buffers ()
+    (interactive)
+    (mapc 'kill-buffer (buffer-list)))
 #+END_SRC
 *** Split Windows
 #+BEGIN_SRC emacs-lisp
@@ -103,27 +120,17 @@ Actions performed on specific
     (balance-windows)
     (other-window 1))
 #+END_SRC
-*** Kill Buffers
-#+BEGIN_SRC emacs-lisp
-  (defun kill-current-buffer ()
-    (interactive)
-    (kill-buffer (current-buffer)))
-
-  (defun kill-all-buffers ()
-    (interactive)
-    (mapc 'kill-buffer (buffer-list)))
-#+END_SRC
 ** Pairs
 #+BEGIN_SRC emacs-lisp
   (defun rcs/electric-pairs-c ()
     (setq electric-pair-pairs #'((?\( . ?\))
-                                 (?\[ . ?\])
-                                 (?\{ . ?\})
-                                 (?\" . ?\")
-                                 (?\' . ?\'))))
+				 (?\[ . ?\])
+				 (?\{ . ?\})
+				 (?\" . ?\")
+				 (?\' . ?\'))))
 
-    (setq electric-pair-pairs #'((?\( . ?\))
-                                 (?\" . ?\")))
+  (setq electric-pair-pairs #'((?\( . ?\))
+			       (?\" . ?\")))
 
   (add-hook 'c-mode-hook #'rcs/electric-pairs-c)
   (electric-pair-mode t)

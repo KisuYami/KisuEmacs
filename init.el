@@ -44,7 +44,7 @@
    '("e1ecb0536abec692b5a5e845067d75273fe36f24d01210bf0aa5842f2a7e029f" "be9645aaa8c11f76a10bcf36aaf83f54f4587ced1b9b679b55639c87404e2499" "361f5a2bc2a7d7387b442b2570b0ef35198442b38c2812bf3c70e1e091771d1a" "1526aeed166165811eefd9a6f9176061ec3d121ba39500af2048073bea80911e" default))
  '(org-agenda-files nil)
  '(package-selected-packages
-   '(company-c-headers hungry-delete pkgbuild-mode htmlize emacs-htmlize emacs-htmlise general yasnippet-snippets yasnippet company-irony irony company ox-reveal ox-twbs org-bullets hl-todo flycheck-ledger ledger-mode flycheck helpful x86-lookup git-gutter-fringe+ git-gutter+ evil-magit magit switch-window ido-vertical-mode dashboard page-break-lines projectile sudo-edit which-key smex evil doom-modeline doom-themes use-package)))
+   '(elcord company-c-headers hungry-delete pkgbuild-mode htmlize emacs-htmlize emacs-htmlise general yasnippet-snippets yasnippet company-irony irony company ox-reveal ox-twbs org-bullets hl-todo flycheck-ledger ledger-mode flycheck helpful x86-lookup git-gutter-fringe+ git-gutter+ evil-magit magit switch-window ido-vertical-mode dashboard page-break-lines projectile sudo-edit which-key smex evil doom-modeline doom-themes use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
