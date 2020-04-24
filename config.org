@@ -69,15 +69,6 @@ Usefull functions that are plain simple to understand
     (eshell-command
      (format "find %s -type f -name \"*.[ch]\" | etags -" dir-name)))
 #+END_SRC
-*** Compile Config
-Actions performed on specific
-#+BEGIN_SRC emacs-lisp
-  (defun rcs/byte-compile-config ()
-    (interactive)
-    "Byte compile emacs config"
-    (byte-compile-file (expand-file-name "config.el" user-emacs-directory))
-    (byte-compile-file (expand-file-name "init.el" user-emacs-directory)))
-#+END_SRC
 *** Discord Rich Presence
 #+BEGIN_SRC emacs-lisp
   (use-package elcord
@@ -120,6 +111,15 @@ Actions performed on specific
     (balance-windows)
     (other-window 1))
 #+END_SRC
+*** Fix evil maps
+#+BEGIN_SRC emacs-lisp
+  (defun rcs/fix-evil-keymap (keymap hook)
+    "Make an default keymap compatyble with evil"
+    (eval-after-load 'evil
+      '(progn
+	 (evil-make-overriding-map keymap 'normal)
+	 (add-hook 'hook 'evil-normalize-keymaps))))
+#+END_SRC
 ** Pairs
 #+BEGIN_SRC emacs-lisp
   (defun rcs/electric-pairs-c ()
@@ -127,13 +127,17 @@ Actions performed on specific
 				 (?\[ . ?\])
 				 (?\{ . ?\})
 				 (?\" . ?\")
-				 (?\' . ?\'))))
+				 (?\' . ?\')))
+    (electric-pair-local-mode))
 
-  (setq electric-pair-pairs #'((?\( . ?\))
-			       (?\" . ?\")))
+  (defun rcs/electric-pairs-lisp/org ()
+    (setq electric-pair-pairs #'((?\( . ?\))
+				 (?\" . ?\")))
+    (electric-pair-local-mode))
 
   (add-hook 'c-mode-hook #'rcs/electric-pairs-c)
-  (electric-pair-mode t)
+  (add-hook 'org-mode-hook #'rcs/electric-pairs-lisp/org)
+  (add-hook 'lisp-mode-hook #'rcs/electric-pairs-lisp/org)
 #+END_SRC
 ** Commands
 #+BEGIN_SRC emacs-lisp
@@ -164,21 +168,15 @@ Am I evil? Yes, I am!
 
   (use-package evil
     :ensure t
-    :init (evil-mode 1))
+    :init (evil-mode 1)
+    :config
+    (setq evil-emacs-state-modes nil)
+    (setq evil-insert-state-modes nil)
+    (setq evil-motion-state-modes nil)
+    (setq evil-move-cursor-back nil))
 
-  (setq evil-emacs-state-modes nil)
-  (setq evil-insert-state-modes nil)
-  (setq evil-motion-state-modes nil)
-  (setq evil-move-cursor-back nil)
-
-  (eval-after-load 'evil
-    '(progn
-       (evil-make-overriding-map help-mode-map 'normal)
-       (evil-make-overriding-map calendar-mode-map 'normal)
-
-       (add-hook 'calendar-mode-hook 'evil-normalize-keymaps)
-       (add-hook 'help-mode-hook 'evil-normalize-keymaps)))
-
+  (rcs/fix-evil-keymap help-mode-map help-mode-hook)
+  (rcs/fix-evil-keymap calendar-mode-map calendar-mode-hook)
 #+END_SRC
 *** Keymaps
 Keybinds that shold be used trough all the modes.
@@ -383,14 +381,10 @@ Dash as startup page
 #+END_SRC
 *** Docs
 #+BEGIN_SRC emacs-lisp
-  (use-package helpful
-    :ensure t)
-
-  ;; Fix the keybinds for helpful
-  (eval-after-load 'evil
-    '(progn
-       (evil-make-overriding-map helpful-mode-map 'normal)
-       (add-hook 'helpful-mode-hook #'evil-normalize-keymaps)))
+    (use-package helpful
+      :ensure t
+      :config
+      (rcs/fix-evil-keymap helpful-mode-map helpful-mode-hook))
 #+END_SRC
 *** Highlighting
 #+BEGIN_SRC emacs-lisp
