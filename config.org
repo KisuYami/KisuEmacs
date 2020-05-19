@@ -1,6 +1,6 @@
 #+title: KisuEmacs
+moved to https://gitlab.com/KisuYami/KisuEmacs
 [[./img/kisuemacs.png]]
-
 * Visual
 Themes, modeline, syntax hightlight and more
 ** GUI
